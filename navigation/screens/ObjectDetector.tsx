@@ -5,6 +5,10 @@ import { Camera, CameraType } from 'expo-camera';
 import FormData from 'form-data';
 import * as FileSystem from 'expo-file-system';
 import * as Location from 'expo-location';
+import { deleteDoc, doc, getDoc, setDoc, collection } from 'firebase/firestore';
+import {db} from '../../firebaseConfig';
+
+//const myDoc = doc(db, "MyCollection", "MyDocument")
 
 const blurhash =
   '|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[';
@@ -33,7 +37,7 @@ export default function ObjectDetector({navigation}) {
 
       const loc = await Location.getCurrentPositionAsync({accuracy: 4});
       setLocation(loc.coords);
-      console.log(loc.coords);
+      //console.log(loc.coords);
       //console.log(location);
     })();
   }, []);
@@ -69,7 +73,7 @@ export default function ObjectDetector({navigation}) {
       const imageUri = photo.uri;
 
       //const apiUrl = 'http://localhost:5000/media/upload'
-      const apiUrl = 'http://192.168.1.9:5000/media/upload'; // Replace with your API endpoint URL
+      const apiUrl = 'http://192.168.1.33:5000/media/upload'; // Replace with your API endpoint URL
 
       const name_ = photo.uri.split('/').pop();
 
@@ -98,11 +102,42 @@ export default function ObjectDetector({navigation}) {
       // Handle any errors here
       console.error('Error:', error);
     }
-
   };
 
-  function toggleCameraType() {
-    setType(current => (current === CameraType.back ? CameraType.front : CameraType.back));
+  const save_detection = async () => {
+    const myDoc = doc(db, "Detections", "Prueba")
+
+    getDoc(myDoc)
+      // Handling Promises
+        .then((snapshot) => {
+          // MARK: Success
+          console.log(snapshot.exists());
+          const docData = {
+            latitude: location.latitude, 
+            longitude: location.longitude,
+            title: 'deteccion', 
+            description: 'primer intento',
+            Huecos: responseData.Hueco,
+            HuecosGraves: responseData.HuecoGrave,
+            Grietas: responseData.Grieta,
+          }
+          setDoc(myDoc, docData)
+            // Handling Promises
+            .then(() => {
+              // MARK: Success
+              alert("Saved Succesfully!")
+            })
+            .catch((error) => {
+              // MARK: Failure
+              alert(error.message)
+            })
+        })
+    // await myDoc.doc('SF').set({
+    //   latitude: 'San Francisco', 
+    //   longitude: 'CA',
+    //   title: 'deteccion', 
+    //   description: 'primer intento',
+    // })
   }
 
   return (
@@ -128,6 +163,8 @@ export default function ObjectDetector({navigation}) {
             <Image
               style={styles.image}
               source={{uri: `data:image/png;base64,${baseImg}`}}
+              placeholder={blurhash}
+              //placeholder={{uri: 'https://www.icegif.com/wp-content/uploads/2023/05/icegif-186.gif'}}
               //loadingIndicatorSource={require("./assets/loading_det.gif")}
             />
           </View>
@@ -140,7 +177,11 @@ export default function ObjectDetector({navigation}) {
           }}>
             <Text>Return</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={{width:'100%', height:50,borderWidth:1, alignSelf:'flex-start', borderRadius:10, justifyContent:'center', alignItems:'center',}}>
+          <TouchableOpacity style={{width:'100%', height:50,borderWidth:1, alignSelf:'flex-start', borderRadius:10, justifyContent:'center', alignItems:'center',}}
+          onPress={() => {
+            save_detection()
+            setPhotoTaken(true)
+          }}>
             <Text>Save</Text>
           </TouchableOpacity>
           </View>
