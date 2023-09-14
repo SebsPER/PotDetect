@@ -5,8 +5,9 @@ import { Camera, CameraType } from 'expo-camera';
 import FormData from 'form-data';
 import * as FileSystem from 'expo-file-system';
 import * as Location from 'expo-location';
-import { deleteDoc, doc, getDoc, setDoc, collection } from 'firebase/firestore';
+import { deleteDoc, doc, getDoc, setDoc, collection, addDoc } from 'firebase/firestore';
 import {db} from '../../firebaseConfig';
+
 
 //const myDoc = doc(db, "MyCollection", "MyDocument")
 
@@ -73,7 +74,7 @@ export default function ObjectDetector({navigation}) {
       const imageUri = photo.uri;
 
       //const apiUrl = 'http://localhost:5000/media/upload'
-      const apiUrl = 'http://192.168.1.33:5000/media/upload'; // Replace with your API endpoint URL
+      const apiUrl = 'http://192.168.1.9:5000/media/upload'; // Replace with your API endpoint URL
 
       const name_ = photo.uri.split('/').pop();
 
@@ -105,39 +106,20 @@ export default function ObjectDetector({navigation}) {
   };
 
   const save_detection = async () => {
-    const myDoc = doc(db, "Detections", "Prueba")
-
-    getDoc(myDoc)
-      // Handling Promises
-        .then((snapshot) => {
-          // MARK: Success
-          console.log(snapshot.exists());
-          const docData = {
-            latitude: location.latitude, 
-            longitude: location.longitude,
-            title: 'deteccion', 
-            description: 'primer intento',
-            Huecos: responseData.Hueco,
-            HuecosGraves: responseData.HuecoGrave,
-            Grietas: responseData.Grieta,
-          }
-          setDoc(myDoc, docData)
-            // Handling Promises
-            .then(() => {
-              // MARK: Success
-              alert("Saved Succesfully!")
-            })
-            .catch((error) => {
-              // MARK: Failure
-              alert(error.message)
-            })
-        })
-    // await myDoc.doc('SF').set({
-    //   latitude: 'San Francisco', 
-    //   longitude: 'CA',
-    //   title: 'deteccion', 
-    //   description: 'primer intento',
-    // })
+    try {
+    const docRef = await addDoc(collection(db, "Detections"), {
+     latitude: location.latitude,
+                longitude: location.longitude,
+                title: 'deteccion',
+                description: 'primer intento',
+                Huecos: responseData.Hueco,
+                HuecosGraves: responseData.HuecoGrave,
+                Grietas: responseData.Grieta,
+    });
+    console.log("Document written with ID: ", docRef.id);
+  } catch (e) {
+   console.error("Error adding document: ", e);
+  }
   }
 
   return (
