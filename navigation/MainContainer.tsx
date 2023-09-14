@@ -8,11 +8,15 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import ObjectDetector from './screens/ObjectDetector';
 import MapScreen from './screens/MapScreen';
 import UserScreen from './screens/UserScreen';
+import ProyectsScreen from './screens/ProyectsScreen';
+import RegisterScreen from './screens/RegisterScreen';
 
 // Names
 const objectScreenName = 'Camara';
 const mapScreenName = 'Mapa';
 const userScreenName = 'Ajustes';
+const proyectScreenName = 'Proyect';
+const registerScreen = 'Registros';
 
 const Tab = createBottomTabNavigator();
 
@@ -32,6 +36,8 @@ export default function MainContainer() {
                         iconName = focused ? 'map':'map-outline';
                     } else if (rn === userScreenName) {
                         iconName = focused ? 'settings':'settings-outline';
+                    } else if (rn === proyectScreenName) {
+                          iconName = focused ? 'folder':'folder';
                     }
 
                     return <Ionicons name={iconName} size={size} color={color} />
@@ -42,9 +48,12 @@ export default function MainContainer() {
 
             <Tab.Screen name={objectScreenName} component={ObjectDetector} options={{ headerShown: false }}/>
             <Tab.Screen name={mapScreenName} component={MapScreen} options={{ headerShown: false }}/>
+            <Tab.Screen name={proyectScreenName} component={ProyectsScreen} options={{ headerShown: false }}/>
             <Tab.Screen name={userScreenName} component={UserScreen} options={{ headerShown: false }}/>
+            <Tab.Screen name={registerScreen} component={RegisterScreen} options={{ tabBarButton: () => null }} />
 
             </Tab.Navigator>
+
         </NavigationContainer>
     )
 };
