@@ -2,20 +2,32 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, Image, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
 import { collection, getDocs } from 'firebase/firestore';
 import {db} from '../../firebaseConfig';
+import GlobalValues from '../../utils/GlobalValues.tsx';
+import { useFocusEffect } from '@react-navigation/native';
 
 export default function RegisterScreen({navigation}) {
   const [detections, setDetections] = useState([]);
 
-  useEffect(() => {
-   const getList = async () => {
-            const fetchedList = await fetchListFromFirestore();
-            setDetections(fetchedList);
-          };
-            getList();
-    }, []);
+    useFocusEffect(
+      React.useCallback(() => {
+        const getList = async () => {
+          const fetchedList = await fetchListFromFirestore();
+          setDetections(fetchedList);
+        };
+        getList();
+
+        return () =>{
+        setDetections([])
+        }
+      }, [])
+    );
+
+
 
     const fetchListFromFirestore = async () => {
-       const querySnapshot = await getDocs(collection(db, "Detections"));
+    console.log("Register",GlobalValues.getProyectoUID());
+
+       const querySnapshot = await getDocs(collection(db, "Empresas",  '5pRvm5sLFIfzKnxYuArF','proyectos',GlobalValues.getProyectoUID(),'Registro'));
        const detections = []
        querySnapshot.forEach((doc) => {
        const data = doc.data();
@@ -32,8 +44,13 @@ export default function RegisterScreen({navigation}) {
       };
 
        const handleItemClick = (item) => {
-          console.log(`Hiciste clic en ${item.nombre}`);
+         // console.log(`Hiciste clic en ${item.nombre}`);
         };
+
+         const handleCreateProject = () => {
+
+                navigation.navigate('Registros')
+              };
 
   const renderDetectionItem = ({ item }) => (
   <TouchableOpacity onPress={() => handleItemClick(item)}>

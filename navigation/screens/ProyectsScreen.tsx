@@ -3,11 +3,10 @@ import { View, Text, Image, StyleSheet, FlatList, TouchableOpacity  } from 'reac
 import {db} from '../../firebaseConfig';
 import { useNavigation } from '@react-navigation/native';
 import { collection, getDocs } from 'firebase/firestore';
-
+import GlobalValues from '../../utils/GlobalValues.tsx';
 
 export default function ProyectsScreen({navigation}) {
   const [projects, setProjects] = useState([]);
-
 
   useEffect(() => {
    const getList = async () => {
@@ -18,9 +17,14 @@ export default function ProyectsScreen({navigation}) {
             }, []);
 
   const fetchListFromFirestore = async () => {
-   const querySnapshot = await getDocs(collection(db, "Proyectos"));
+  console.log("entro");
+  ///para pruebas
+   //const querySnapshot = await getDocs(collection(db, "Proyectos"));
+
+    const Proyecto = await getDocs(collection(db, 'Empresas', '5pRvm5sLFIfzKnxYuArF', 'proyectos'));
+
    const projects = []
-   querySnapshot.forEach((doc) => {
+   Proyecto.forEach((doc) => {
    const data = doc.data();
     projects.push({
     id:doc.id,
@@ -34,7 +38,9 @@ export default function ProyectsScreen({navigation}) {
   };
 
    const handleItemClick = (item) => {
-            console.log(`Hiciste clic en ${item.nombre}`);
+   GlobalValues.setProyectoUID(item.id);
+            console.log(`Hiciste clic en ${item.id}`);
+        navigation.navigate('Registros')
           };
 
    const renderProjectItem = ({ item }) => (
@@ -51,7 +57,8 @@ export default function ProyectsScreen({navigation}) {
     );
 
      const handleCreateProject = () => {
-        navigation.navigate('Registros')
+        //navigation.navigate('Registros')
+        //Aqui se navega a una pestaña para crear un proyecto nuevo
       };
 
     return (
