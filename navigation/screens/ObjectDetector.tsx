@@ -106,6 +106,7 @@ export default function ObjectDetector({navigation}) {
   };
 
   const save_detection = async () => {
+  if(responseData.Hueco != 0 && responseData.HuecoGrave != 0 && responseData.Grieta != 0){
     try {
     const docRef = await addDoc(collection(db, "Detections"), {
      latitude: location.latitude,
@@ -120,6 +121,10 @@ export default function ObjectDetector({navigation}) {
   } catch (e) {
    console.error("Error adding document: ", e);
   }
+  }else{
+  print("los valores es 0 x eso no se efectua el guardado");
+  }
+
   }
 
   return (
