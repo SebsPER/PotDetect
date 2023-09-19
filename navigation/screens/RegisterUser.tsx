@@ -5,7 +5,7 @@ import { auth } from '../../firebaseConfig';
 import { deleteDoc, doc, getDoc, setDoc, collection, addDoc } from 'firebase/firestore';
 import {db} from '../../firebaseConfig';
 import { useNavigation } from '@react-navigation/native';
-
+import GlobalValues from '../../utils/GlobalValues.tsx';
 
 export default function RegisterScreen({navigation}) {
   const [ruc, setRuc] = useState('');
@@ -27,6 +27,8 @@ try {
                       Correo: email,
                       Contrasena: password,
           });
+
+      GlobalValues.setEmpresaUID(docRef.id);
 
           const Proyecto = await addDoc(collection(db, 'Empresas', docRef.id, 'Usuarios'),{
                                 Nombre: nombre,
