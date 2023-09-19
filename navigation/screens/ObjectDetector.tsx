@@ -132,7 +132,6 @@ export default function ObjectDetector({navigation}) {
   }else{
   print("los valores es 0 x eso no se efectua el guardado");
   }
-
   }
 
   return (

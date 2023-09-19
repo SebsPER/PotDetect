@@ -2,9 +2,12 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../../firebaseConfig';
+import { deleteDoc, doc, getDoc, setDoc, collection, addDoc } from 'firebase/firestore';
+import {db} from '../../firebaseConfig';
 
 const RegisterScreen: React.FC = () => {
   const [ruc, setRuc] = useState('');
+  const [passwordU, setpasswordU] = useState('');
   const [nombre, setNombre] = useState('');
   const [apellido, setApellido] = useState('');
   const [genero, setGenero] = useState('');
@@ -16,6 +19,26 @@ const RegisterScreen: React.FC = () => {
     try {
       //const auth = getAuth();
       await createUserWithEmailAndPassword(auth, email, password);
+try {
+      const docRef = await addDoc(collection(db, "Empresas"), {
+           RUC: ruc,
+                      Correo: email,
+                      Contrasena: password,
+          });
+
+          const Proyecto = await addDoc(collection(db, 'Empresas', docRef.id, 'Usuarios'),{
+                                Nombre: nombre,
+                           Contrasena: passwordU,
+                           Permisos: 1,
+                       });
+
+    console.log("Registro ID: ", docRef.id);
+} catch (e) {
+   console.error("Error adding document: ", e);
+  }
+
+
+
       // El usuario se ha registrado con éxito
       setError(null);
     } catch (error) {
@@ -35,24 +58,6 @@ const RegisterScreen: React.FC = () => {
       />
       <TextInput
         style={styles.input}
-        placeholder="Nombre"
-        onChangeText={(text) => setNombre(text)}
-        value={nombre}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Apellido"
-        onChangeText={(text) => setApellido(text)}
-        value={apellido}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Género"
-        onChangeText={(text) => setGenero(text)}
-        value={genero}
-      />
-      <TextInput
-        style={styles.input}
         placeholder="Correo electrónico"
         onChangeText={(text) => setEmail(text)}
         value={email}
@@ -64,6 +69,19 @@ const RegisterScreen: React.FC = () => {
         secureTextEntry
         value={password}
       />
+      <TextInput
+        style={styles.input}
+        placeholder="Nombre Usuario"
+        onChangeText={(text) => setNombre(text)}
+        value={nombre}
+      />
+      <TextInput
+              style={styles.input}
+              placeholder="Contraseña Usuario"
+              onChangeText={(text) => setpasswordU(text)}
+              secureTextEntry
+              value={passwordU}
+            />
       <TouchableOpacity style={styles.button} onPress={handleRegister}>
         <Text style={styles.buttonText}>Registrarse</Text>
       </TouchableOpacity>

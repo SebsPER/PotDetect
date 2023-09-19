@@ -39,19 +39,11 @@ export default function ProyectsScreen({navigation}) {
     return projects
   };
 
-<<<<<<< HEAD
    const handleItemClick = (item) => {
    GlobalValues.setProyectoUID(item.id);
             console.log(`Hiciste clic en ${item.id}`);
         navigation.navigate('Registros');
           };
-=======
-  const handleItemClick = (item) => {
-    GlobalValues.setProyectoUID(item.id);
-    console.log(`Hiciste clic en ${item.id}`);
-    navigation.navigate('Registros')
-  };
->>>>>>> 83b3d6c544b9283a03fea637ccf9023a9a1336e8
 
    const renderProjectItem = ({ item }) => (
     <TouchableOpacity onPress={() => handleItemClick(item)}>

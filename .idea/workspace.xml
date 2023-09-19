@@ -5,18 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8d9412ea-9a21-4015-a84b-4453618034d5" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/navigation/screens/RegisterUser.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/App.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/navigation/MainContainer.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/navigation/MainContainer.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/navigation/screens/MapScreen.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/navigation/screens/MapScreen.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/navigation/screens/ObjectDetector.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/navigation/screens/ObjectDetector.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/navigation/screens/ProyectsScreen.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/navigation/screens/ProyectsScreen.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/navigation/screens/RegisterScreen.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/navigation/screens/RegisterScreen.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/navigation/screens/UserScreen.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/navigation/screens/UserScreen.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/navigation/screens/login.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/navigation/screens/login.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/navigation/screens/RegisterUser.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/navigation/screens/RegisterUser.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
