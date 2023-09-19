@@ -1,38 +1,56 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../../firebaseConfig';
-import RegisterScreen from './RegisterScreen'; // Importa la pantalla de registro
-import { useNavigation } from '@react-navigation/native';
 
-export default function LoginScreen({navigation}) {
+const RegisterScreen: React.FC = () => {
+  const [ruc, setRuc] = useState('');
+  const [nombre, setNombre] = useState('');
+  const [apellido, setApellido] = useState('');
+  const [genero, setGenero] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
-  const [showRegister, setShowRegister] = useState(false); // Estado para mostrar/ocultar la pantalla de registro
 
-  const handleSignIn = async () => {
-
+  const handleRegister = async () => {
     try {
-      await signInWithEmailAndPassword(auth, email, password);
+      //const auth = getAuth();
+      await createUserWithEmailAndPassword(auth, email, password);
+      // El usuario se ha registrado con éxito
       setError(null);
-      navigation.navigate('Main');
     } catch (error) {
-      console.log(error.message);
-      setError(error.message);
+      setError(error.message); // Captura y muestra el mensaje de error
     }
-  };
-
-  // Función para cambiar el estado y mostrar la pantalla de registro
-  const showRegisterScreen = () => {
-
-      navigation.navigate('Register');
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Iniciar Sesión</Text>
+      <Text style={styles.title}>Registrarse</Text>
       {error && <Text style={styles.errorText}>{error}</Text>}
+      <TextInput
+        style={styles.input}
+        placeholder="RUC de la empresa"
+        onChangeText={(text) => setRuc(text)}
+        value={ruc}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Nombre"
+        onChangeText={(text) => setNombre(text)}
+        value={nombre}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Apellido"
+        onChangeText={(text) => setApellido(text)}
+        value={apellido}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Género"
+        onChangeText={(text) => setGenero(text)}
+        value={genero}
+      />
       <TextInput
         style={styles.input}
         placeholder="Correo electrónico"
@@ -46,20 +64,13 @@ export default function LoginScreen({navigation}) {
         secureTextEntry
         value={password}
       />
-      <TouchableOpacity style={styles.button} onPress={handleSignIn}>
-        <Text style={styles.buttonText}>Iniciar Sesión</Text>
+      <TouchableOpacity style={styles.button} onPress={handleRegister}>
+        <Text style={styles.buttonText}>Registrarse</Text>
       </TouchableOpacity>
-
-      {/* Botón para mostrar la pantalla de registro */}
-      <TouchableOpacity onPress={showRegisterScreen}>
-        <Text style={styles.registerText}>Registrarse</Text>
-      </TouchableOpacity>
-
     </View>
   );
-}
+};
 
-// Estilos (los estilos de RegisterScreen se deben definir en su propio archivo)
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -96,9 +107,6 @@ const styles = StyleSheet.create({
     color: 'red',
     marginBottom: 10,
   },
-  registerText: {
-    marginTop: 10,
-    color: 'blue',
-    textDecorationLine: 'underline',
-  },
 });
+
+export default RegisterScreen;

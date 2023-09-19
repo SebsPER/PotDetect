@@ -2,13 +2,15 @@ import React, { useEffect, useState } from 'react';
 
 import { View, Text, ActivityIndicator } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { auth } from './firebaseConfig';
 
 import MainContainer from './navigation/MainContainer';
 import LoginScreen  from './navigation/screens/login';
+import Register  from './navigation/screens/RegisterUser';
 
+const Stack = createNativeStackNavigator();
 
 function App() {
     const [user, setUser] = useState(null);
@@ -30,14 +32,38 @@ function App() {
             </View>
           );
         }
-
-         if (!user) {
-            return <LoginScreen />;
+        if (!user) {
+            return (
+             <NavigationContainer>
+                                            <Stack.Navigator initialRouteName="Login">
+                                              <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }}/>
+                                              <Stack.Screen name="Main" component={MainContainer} options={{ headerShown: false }}/>
+                                              <Stack.Screen name="Register" component={Register} options={{ headerShown: false }}/>
+                                            </Stack.Navigator>
+                                      </NavigationContainer>
+            )
           }
 
-  return (
-        <MainContainer />
-    );
+
+           return (
+                <NavigationContainer>
+                                 <Stack.Navigator initialRouteName="Main">
+                                   <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }}/>
+                                   <Stack.Screen name="Main" component={MainContainer} options={{ headerShown: false }}/>
+                                 </Stack.Navigator>
+                           </NavigationContainer>
+             );
+
   }
+
+  /*
+
+   return (
+             <NavigationContainer>
+               {user ? <MainContainer /> : <LoginScreen />}
+             </NavigationContainer>
+           );
+
+  */
 
 export default App;

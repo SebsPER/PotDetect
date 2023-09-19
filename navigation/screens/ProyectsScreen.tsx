@@ -40,7 +40,7 @@ export default function ProyectsScreen({navigation}) {
    const handleItemClick = (item) => {
    GlobalValues.setProyectoUID(item.id);
             console.log(`Hiciste clic en ${item.id}`);
-        navigation.navigate('Registros')
+        navigation.navigate('Registros');
           };
 
    const renderProjectItem = ({ item }) => (

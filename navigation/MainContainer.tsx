@@ -1,6 +1,5 @@
 import * as React from 'react';
 import {View, Text} from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
@@ -22,7 +21,6 @@ const Tab = createBottomTabNavigator();
 
 export default function MainContainer() {
     return(
-        <NavigationContainer>
             <Tab.Navigator
             initialRouteName={objectScreenName}
             screenOptions={({route}) => ({
@@ -54,6 +52,5 @@ export default function MainContainer() {
 
             </Tab.Navigator>
 
-        </NavigationContainer>
     )
 };

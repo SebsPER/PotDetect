@@ -21,8 +21,6 @@ export default function RegisterScreen({navigation}) {
       }, [])
     );
 
-
-
     const fetchListFromFirestore = async () => {
     console.log("Register",GlobalValues.getProyectoUID());
 
@@ -47,7 +45,6 @@ export default function RegisterScreen({navigation}) {
         };
 
          const handleCreateProject = () => {
-
                 navigation.navigate('Registros')
               };
 

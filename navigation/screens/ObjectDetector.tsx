@@ -26,6 +26,14 @@ export default function ObjectDetector({navigation}) {
 
   const [location, setLocation] = useState<Location.LocationObjectCoords>({"accuracy": 32.18999583376263, "altitude": 157.40081787109375, "altitudeAccuracy": 16.810970306396484, "heading": -1, "latitude": -12.104007595961612, "longitude": -76.99086161121983, "speed": -1});
   const [errorMsg, setErrorMsg] = useState(null);
+
+  //dropdown
+    const [isOpen, setIsOpen] = useState(false);
+  const toggleMenu = () => {
+      setIsOpen(!isOpen);
+    };
+  const options = ['Opción 1', 'Opción 2', 'Opción 3'];
+  //
   
   useEffect(() => {
     (async () => {
@@ -74,7 +82,7 @@ export default function ObjectDetector({navigation}) {
       const imageUri = photo.uri;
 
       //const apiUrl = 'http://localhost:5000/media/upload'
-      const apiUrl = 'http://192.168.1.9:5000/media/upload'; // Replace with your API endpoint URL
+      const apiUrl = 'http://10.11.129.70:5000/media/upload'; // Replace with your API endpoint URL
 
       const name_ = photo.uri.split('/').pop();
 
@@ -129,6 +137,28 @@ export default function ObjectDetector({navigation}) {
 
   return (
     <View style={styles.container}>
+
+ <View style={styles.dropdownContainer}>
+             <TouchableOpacity onPress={toggleMenu} style={styles.menuButton}>
+                    <Text>☰</Text>
+                  </TouchableOpacity>
+
+                   {/* Menú desplegable */}
+                        {isOpen && (
+                          <View style={styles.menu}>
+                            {options.map((option, index) => (
+                              <TouchableOpacity
+                                key={index}
+                                onPress={() => console.log(`${option} seleccionada`)}
+                              >
+                                <Text>{option}</Text>
+                              </TouchableOpacity>
+                            ))}
+                          </View>
+                        )}
+        </View>
+
+
       {photoTaken ?(
         <View style={{flex: 1}}>
         <Camera style={StyleSheet.absoluteFill} type={type} ref={cameraRef}>
@@ -218,4 +248,17 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: 'white',
   },
+  dropdownContainer: {
+      position: 'absolute',
+      top: 20,
+      left: 20,
+      zIndex: 1,
+      backgroundColor: 'white',
+      borderRadius: 8,
+      padding: 8,
+      elevation: 2,
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.2,
+    },
 });
