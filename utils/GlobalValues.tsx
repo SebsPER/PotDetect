@@ -8,6 +8,10 @@ class GlobalValues {
     // Agrega más valores globales según tus necesidades
   };
 
+  static getEmpresaUID() {
+      return this.values.empresaUID;
+    }
+
   static setProyectoUID(proyectoUID) {
     this.values.proyectoUID = proyectoUID;
     console.log("valor uid project",this.values.proyectoUID);
@@ -33,13 +37,10 @@ class GlobalValues {
     }
   }
 
-  static setEmpresaUID(empresaUID) {
-    this.values.empresaUID = empresaUID;
-  }
-
-  static getEmpresaUID() {
-    return this.values.empresaUID;
-  }
+  static setEmpresaUID(empresaUID_) {
+      this.values.empresaUID = empresaUID_;
+      console.log(this.values.empresaUID)
+   }
 
   static setOtroValor(otroValor) {
     this.values.otroValor = otroValor;

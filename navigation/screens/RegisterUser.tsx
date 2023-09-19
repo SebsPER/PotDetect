@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../../firebaseConfig';
 import { deleteDoc, doc, getDoc, setDoc, collection, addDoc } from 'firebase/firestore';
 import {db} from '../../firebaseConfig';
+import { useNavigation } from '@react-navigation/native';
 
-const RegisterScreen: React.FC = () => {
+
+export default function RegisterScreen({navigation}) {
   const [ruc, setRuc] = useState('');
   const [passwordU, setpasswordU] = useState('');
   const [nombre, setNombre] = useState('');
@@ -32,12 +34,11 @@ try {
                            Permisos: 1,
                        });
 
-    console.log("Registro ID: ", docRef.id);
+      await signInWithEmailAndPassword(auth, email, password);
+      navigation.navigate('Main');
 } catch (e) {
    console.error("Error adding document: ", e);
   }
-
-
 
       // El usuario se ha registrado con éxito
       setError(null);

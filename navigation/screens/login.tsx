@@ -4,8 +4,12 @@ import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../../firebaseConfig';
 import RegisterScreen from './RegisterScreen'; // Importa la pantalla de registro
 import { useNavigation } from '@react-navigation/native';
+import GlobalValues from '../../utils/GlobalValues.tsx';
+import { collection, getDocs } from 'firebase/firestore';
+import {db} from '../../firebaseConfig';
 
 export default function LoginScreen({navigation}) {
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -16,6 +20,17 @@ export default function LoginScreen({navigation}) {
     try {
       await signInWithEmailAndPassword(auth, email, password);
       setError(null);
+      //tengo que buscar en empresa el email y cuando lo encuentre extraigo el UID
+       const Empresas = await getDocs(collection(db, 'Empresas'));
+
+          const projects = []
+          Empresas.forEach((doc) => {
+            const data = doc.data();
+
+            if(email == data.Correo){
+      GlobalValues.setEmpresaUID(doc.id);
+            }
+          });
       navigation.navigate('Main');
     } catch (error) {
       console.log(error.message);

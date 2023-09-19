@@ -8,9 +8,6 @@ import * as Location from 'expo-location';
 import { deleteDoc, doc, getDoc, setDoc, collection, addDoc } from 'firebase/firestore';
 import {db} from '../../firebaseConfig';
 
-
-//const myDoc = doc(db, "MyCollection", "MyDocument")
-
 const blurhash =
   '|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[';
   
