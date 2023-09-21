@@ -93,6 +93,10 @@ export default function UserScreen({ navigation }) {
 
     if (querySnapshot.empty) {
       alert("Contraseña equivocada")
+      setLogUser("");
+      GlobalValues.setEmpleadoName("");
+      GlobalValues.setEmpleadoId("");
+      GlobalValues.setPermisos(0);
     } else {
       querySnapshot.forEach((doc) => {
         // doc.data() is never undefined for query doc snapshots
