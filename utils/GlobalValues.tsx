@@ -5,12 +5,35 @@ class GlobalValues {
     work_proyectoName: null,
     empresaUID: null,
     otroValor: null,
+    empleadoName: null,
+    empleadoID: null,
+    permisos: null
     // Agrega más valores globales según tus necesidades
   };
 
   static getEmpresaUID() {
-      return this.values.empresaUID;
+    return this.values.empresaUID;
     }
+  
+  static setEmpleadoName(empleadoData) {
+    this.values.empleadoName= empleadoData.Nombre;
+  }
+
+  static setPermisos(empleadoData) {
+    this.values.permisos= empleadoData.Permisos;
+  }
+
+  static getPermisos() {
+    return this.values.permisos;
+  }
+
+  static getEmpleadoName() {
+    return this.values.empleadoName;
+  }
+
+  static setEmpleadoId(empleadoData) {
+    this.values.empleadoID = empleadoData.Id;
+  }
 
   static setProyectoUID(proyectoUID) {
     this.values.proyectoUID = proyectoUID;
