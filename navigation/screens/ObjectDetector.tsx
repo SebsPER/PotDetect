@@ -1,4 +1,4 @@
-import {useEffect, useState, useRef} from 'react';
+import { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import { Button, StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native';
 import { Camera, CameraType } from 'expo-camera';
@@ -6,12 +6,12 @@ import FormData from 'form-data';
 import * as FileSystem from 'expo-file-system';
 import * as Location from 'expo-location';
 import { deleteDoc, doc, getDoc, setDoc, collection, addDoc } from 'firebase/firestore';
-import {db} from '../../firebaseConfig';
+import { db } from '../../firebaseConfig';
 
 const blurhash =
   '|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[';
-  
-export default function ObjectDetector({navigation}) {
+
+export default function ObjectDetector({ navigation }) {
   const [type, setType] = useState(CameraType.back);
   const [permission, requestPermission] = Camera.useCameraPermissions();
 
@@ -21,27 +21,27 @@ export default function ObjectDetector({navigation}) {
   const [photoTaken, setPhotoTaken] = useState(true);
   const cameraRef = useRef(null);
 
-  const [location, setLocation] = useState<Location.LocationObjectCoords>({"accuracy": 32.18999583376263, "altitude": 157.40081787109375, "altitudeAccuracy": 16.810970306396484, "heading": -1, "latitude": -12.104007595961612, "longitude": -76.99086161121983, "speed": -1});
+  const [location, setLocation] = useState<Location.LocationObjectCoords>({ "accuracy": 32.18999583376263, "altitude": 157.40081787109375, "altitudeAccuracy": 16.810970306396484, "heading": -1, "latitude": -12.104007595961612, "longitude": -76.99086161121983, "speed": -1 });
   const [errorMsg, setErrorMsg] = useState(null);
 
   //dropdown
-    const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const toggleMenu = () => {
-      setIsOpen(!isOpen);
-    };
+    setIsOpen(!isOpen);
+  };
   const options = ['Opción 1', 'Opción 2', 'Opción 3'];
   //
-  
+
   useEffect(() => {
     (async () => {
-      
+
       let { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== 'granted') {
         setErrorMsg('Permission to access location was denied');
         return;
       }
 
-      const loc = await Location.getCurrentPositionAsync({accuracy: 4});
+      const loc = await Location.getCurrentPositionAsync({ accuracy: 4 });
       setLocation(loc.coords);
       //console.log(loc.coords);
       //console.log(location);
@@ -66,32 +66,32 @@ export default function ObjectDetector({navigation}) {
 
   const __takePicture = async () => {
     if (!cameraRef) return
-    const photo = await cameraRef.current.takePictureAsync() 
+    const photo = await cameraRef.current.takePictureAsync()
     //console.log(photo)
     setPhotoTaken(false)
     setCapturedImageUri(photo.uri)
 
-    const loc = await Location.getCurrentPositionAsync({accuracy: 4});
+    const loc = await Location.getCurrentPositionAsync({ accuracy: 4 });
     setLocation(loc.coords);
 
     try {
-        // Defining image URI
+      // Defining image URI
       const imageUri = photo.uri;
 
       //const apiUrl = 'http://localhost:5000/media/upload'
-      const apiUrl = 'http://10.11.129.70:5000/media/upload'; // Replace with your API endpoint URL
+      const apiUrl = 'http://127.0.0.1:5000/media/upload'; // Replace with your API endpoint URL
 
       const name_ = photo.uri.split('/').pop();
 
       const type_ = name_ ? name_.split('.').pop() : '';
 
-        // Read the file data using Expo FileSystem
+      // Read the file data using Expo FileSystem
       const fileData = await FileSystem.readAsStringAsync(photo.uri, {
         encoding: FileSystem.EncodingType.Base64,
       });
 
       let formData = new FormData();
-      formData.append('file', {uri:photo.uri, name: name_, type:'image/'+type_});
+      formData.append('file', { uri: photo.uri, name: name_, type: 'image/' + type_ });
 
       const response = await axios.post(apiUrl, formData, {
         headers: {
@@ -111,104 +111,104 @@ export default function ObjectDetector({navigation}) {
   };
 
   const save_detection = async () => {
-  if(responseData.Hueco != 0 && responseData.HuecoGrave != 0 && responseData.Grieta != 0){
-    try {
-    const docRef = await addDoc(collection(db, "Detections"), {
-     latitude: location.latitude,
-                longitude: location.longitude,
-                title: 'deteccion',
-                description: 'primer intento',
-                Huecos: responseData.Hueco,
-                HuecosGraves: responseData.HuecoGrave,
-                Grietas: responseData.Grieta,
-    });
-    console.log("Document written with ID: ", docRef.id);
-  } catch (e) {
-   console.error("Error adding document: ", e);
-  }
-  }else{
-  print("los valores es 0 x eso no se efectua el guardado");
-  }
+    if (responseData.Hueco != 0 && responseData.HuecoGrave != 0 && responseData.Grieta != 0) {
+      try {
+        const docRef = await addDoc(collection(db, "Detections"), {
+          latitude: location.latitude,
+          longitude: location.longitude,
+          title: 'deteccion',
+          description: 'primer intento',
+          Huecos: responseData.Hueco,
+          HuecosGraves: responseData.HuecoGrave,
+          Grietas: responseData.Grieta,
+        });
+        console.log("Document written with ID: ", docRef.id);
+      } catch (e) {
+        console.error("Error adding document: ", e);
+      }
+    } else {
+      print("los valores es 0 x eso no se efectua el guardado");
+    }
   }
 
   return (
     <View style={styles.container}>
 
- <View style={styles.dropdownContainer}>
-             <TouchableOpacity onPress={toggleMenu} style={styles.menuButton}>
-                    <Text>☰</Text>
-                  </TouchableOpacity>
-
-                   {/* Menú desplegable */}
-                        {isOpen && (
-                          <View style={styles.menu}>
-                            {options.map((option, index) => (
-                              <TouchableOpacity
-                                key={index}
-                                onPress={() => console.log(`${option} seleccionada`)}
-                              >
-                                <Text>{option}</Text>
-                              </TouchableOpacity>
-                            ))}
-                          </View>
-                        )}
-        </View>
-
-
-      {photoTaken ?(
-        <View style={{flex: 1}}>
-        <Camera style={StyleSheet.absoluteFill} type={type} ref={cameraRef}>
-        </Camera>
-        <TouchableOpacity style={{
-          width: 60,
-          height: 60,
-          borderRadius: 30,
-          backgroundColor: '#FFFFFF',
-          position: 'absolute',
-          bottom: 30,
-          alignSelf: 'center',
-          opacity: 0.5,
-          }} onPress={__takePicture}>
+      <View style={styles.dropdownContainer}>
+        <TouchableOpacity onPress={toggleMenu} style={styles.menuButton}>
+          <Text>☰</Text>
         </TouchableOpacity>
-      </View>):(
-        <View style={styles.container}>
-          <View style={{flex:5, flexDirection:'column' ,justifyContent:'center', alignItems:'center', backgroundColor:'white'}}>
-            <Image
-              style={styles.image}
-              source={{uri: `data:image/png;base64,${baseImg}`}}
-              placeholder={blurhash}
-              //placeholder={{uri: 'https://www.icegif.com/wp-content/uploads/2023/05/icegif-186.gif'}}
-              //loadingIndicatorSource={require("./assets/loading_det.gif")}
-            />
+
+        {/* Menú desplegable */}
+        {isOpen && (
+          <View style={styles.menu}>
+            {options.map((option, index) => (
+              <TouchableOpacity
+                key={index}
+                onPress={() => console.log(`${option} seleccionada`)}
+              >
+                <Text>{option}</Text>
+              </TouchableOpacity>
+            ))}
           </View>
-        <View style={{flex:1, flexDirection:'row'}}>
-          <View style={{flex:3, flexDirection:'column'}}>
-          <TouchableOpacity style={{width:'100%', height:50,borderWidth:1, alignSelf:'flex-start', borderRadius:10, justifyContent:'center', alignItems:'center',}}
-          onPress={() => {
-            setPhotoTaken(true)
-            setbaseImg('')
-          }}>
-            <Text>Return</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={{width:'100%', height:50,borderWidth:1, alignSelf:'flex-start', borderRadius:10, justifyContent:'center', alignItems:'center',}}
-          onPress={() => {
-            save_detection()
-            setPhotoTaken(true)
-          }}>
-            <Text>Save</Text>
-          </TouchableOpacity>
-          </View>
-          <View style={{flex:3, flexDirection:'column'}}>
-            <Text>Huecos: {responseData.Hueco}</Text>
-            <Text>Huecos Graves: {responseData.HuecoGrave}</Text>
-            <Text>Grietas: {responseData.Grieta}</Text>
-            <Text>Tiempo de Inferencia: {responseData.elapsed}</Text>
-          </View>
-        </View>
+        )}
       </View>
 
+
+      {photoTaken ? (
+        <View style={{ flex: 1 }}>
+          <Camera style={StyleSheet.absoluteFill} type={type} ref={cameraRef}>
+          </Camera>
+          <TouchableOpacity style={{
+            width: 60,
+            height: 60,
+            borderRadius: 30,
+            backgroundColor: '#FFFFFF',
+            position: 'absolute',
+            bottom: 30,
+            alignSelf: 'center',
+            opacity: 0.5,
+          }} onPress={__takePicture}>
+          </TouchableOpacity>
+        </View>) : (
+        <View style={styles.container}>
+          <View style={{ flex: 5, flexDirection: 'column', justifyContent: 'center', alignItems: 'center', backgroundColor: 'white' }}>
+            <Image
+              style={styles.image}
+              source={{ uri: `data:image/png;base64,${baseImg}` }}
+              placeholder={blurhash}
+            //placeholder={{uri: 'https://www.icegif.com/wp-content/uploads/2023/05/icegif-186.gif'}}
+            //loadingIndicatorSource={require("./assets/loading_det.gif")}
+            />
+          </View>
+          <View style={{ flex: 1, flexDirection: 'row' }}>
+            <View style={{ flex: 3, flexDirection: 'column' }}>
+              <TouchableOpacity style={{ width: '100%', height: 50, borderWidth: 1, alignSelf: 'flex-start', borderRadius: 10, justifyContent: 'center', alignItems: 'center', }}
+                onPress={() => {
+                  setPhotoTaken(true)
+                  setbaseImg('')
+                }}>
+                <Text>Return</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={{ width: '100%', height: 50, borderWidth: 1, alignSelf: 'flex-start', borderRadius: 10, justifyContent: 'center', alignItems: 'center', }}
+                onPress={() => {
+                  save_detection()
+                  setPhotoTaken(true)
+                }}>
+                <Text>Save</Text>
+              </TouchableOpacity>
+            </View>
+            <View style={{ flex: 3, flexDirection: 'column' }}>
+              <Text>Huecos: {responseData.Hueco}</Text>
+              <Text>Huecos Graves: {responseData.HuecoGrave}</Text>
+              <Text>Grietas: {responseData.Grieta}</Text>
+              <Text>Tiempo de Inferencia: {responseData.elapsed}</Text>
+            </View>
+          </View>
+        </View>
+
       )}
-      
+
 
 
     </View>
@@ -245,16 +245,16 @@ const styles = StyleSheet.create({
     color: 'white',
   },
   dropdownContainer: {
-      position: 'absolute',
-      top: 20,
-      left: 20,
-      zIndex: 1,
-      backgroundColor: 'white',
-      borderRadius: 8,
-      padding: 8,
-      elevation: 2,
-      shadowColor: '#000',
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.2,
-    },
+    position: 'absolute',
+    top: 20,
+    left: 20,
+    zIndex: 1,
+    backgroundColor: 'white',
+    borderRadius: 8,
+    padding: 8,
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+  },
 });
