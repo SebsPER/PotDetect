@@ -6,9 +6,9 @@ import RegisterScreen from './RegisterScreen'; // Importa la pantalla de registr
 import { useNavigation } from '@react-navigation/native';
 import GlobalValues from '../../utils/GlobalValues.tsx';
 import { collection, getDocs } from 'firebase/firestore';
-import {db} from '../../firebaseConfig';
+import { db } from '../../firebaseConfig';
 
-export default function LoginScreen({navigation}) {
+export default function LoginScreen({ navigation }) {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -21,16 +21,16 @@ export default function LoginScreen({navigation}) {
       await signInWithEmailAndPassword(auth, email, password);
       setError(null);
       //tengo que buscar en empresa el email y cuando lo encuentre extraigo el UID
-       const Empresas = await getDocs(collection(db, 'Empresas'));
+      const Empresas = await getDocs(collection(db, 'Empresas'));
 
-          const projects = []
-          Empresas.forEach((doc) => {
-            const data = doc.data();
+      const projects = []
+      Empresas.forEach((doc) => {
+        const data = doc.data();
 
-            if(email == data.Correo){
-      GlobalValues.setEmpresaUID(doc.id);
-            }
-          });
+        if (email == data.Correo) {
+          GlobalValues.setEmpresaUID(doc.id);
+        }
+      });
       navigation.navigate('Main');
     } catch (error) {
       console.log(error.message);
@@ -41,7 +41,7 @@ export default function LoginScreen({navigation}) {
   // Función para cambiar el estado y mostrar la pantalla de registro
   const showRegisterScreen = () => {
 
-      navigation.navigate('Register');
+    navigation.navigate('Register');
   };
 
   return (

@@ -3,11 +3,11 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-nativ
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../../firebaseConfig';
 import { deleteDoc, doc, getDoc, setDoc, collection, addDoc } from 'firebase/firestore';
-import {db} from '../../firebaseConfig';
+import { db } from '../../firebaseConfig';
 import { useNavigation } from '@react-navigation/native';
 import GlobalValues from '../../utils/GlobalValues.tsx';
 
-export default function RegisterScreen({navigation}) {
+export default function RegisterScreen({ navigation }) {
   const [ruc, setRuc] = useState('');
   const [passwordU, setpasswordU] = useState('');
   const [nombre, setNombre] = useState('');
@@ -21,26 +21,26 @@ export default function RegisterScreen({navigation}) {
     try {
       //const auth = getAuth();
       await createUserWithEmailAndPassword(auth, email, password);
-try {
-      const docRef = await addDoc(collection(db, "Empresas"), {
-           RUC: ruc,
-                      Correo: email,
-                      Contrasena: password,
-          });
+      try {
+        const docRef = await addDoc(collection(db, "Empresas"), {
+          RUC: ruc,
+          Correo: email,
+          Contrasena: password,
+        });
 
-      GlobalValues.setEmpresaUID(docRef.id);
+        GlobalValues.setEmpresaUID(docRef.id);
 
-          const Proyecto = await addDoc(collection(db, 'Empresas', docRef.id, 'Usuarios'),{
-                                Nombre: nombre,
-                           Contrasena: passwordU,
-                           Permisos: 1,
-                       });
+        const Proyecto = await addDoc(collection(db, 'Empresas', docRef.id, 'Usuarios'), {
+          Nombre: nombre,
+          Contrasena: passwordU,
+          Permisos: 1,
+        });
 
-      await signInWithEmailAndPassword(auth, email, password);
-      navigation.navigate('Main');
-} catch (e) {
-   console.error("Error adding document: ", e);
-  }
+        await signInWithEmailAndPassword(auth, email, password);
+        navigation.navigate('Main');
+      } catch (e) {
+        console.error("Error adding document: ", e);
+      }
 
       // El usuario se ha registrado con éxito
       setError(null);
@@ -79,12 +79,12 @@ try {
         value={nombre}
       />
       <TextInput
-              style={styles.input}
-              placeholder="Contraseña Usuario"
-              onChangeText={(text) => setpasswordU(text)}
-              secureTextEntry
-              value={passwordU}
-            />
+        style={styles.input}
+        placeholder="Contraseña Usuario"
+        onChangeText={(text) => setpasswordU(text)}
+        secureTextEntry
+        value={passwordU}
+      />
       <TouchableOpacity style={styles.button} onPress={handleRegister}>
         <Text style={styles.buttonText}>Registrarse</Text>
       </TouchableOpacity>

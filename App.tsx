@@ -7,13 +7,13 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { auth } from './firebaseConfig';
 
 import MainContainer from './navigation/MainContainer';
-import LoginScreen  from './navigation/screens/login';
-import Register  from './navigation/screens/RegisterUser';
+import LoginScreen from './navigation/screens/login';
+import Register from './navigation/screens/RegisterUser';
 
 const Stack = createNativeStackNavigator();
 
 function App() {
-    const [user, setUser] = useState(null);
+  const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -22,48 +22,48 @@ function App() {
       setUser(user);
       setLoading(false);
     });
-     return () => unsubscribe();
-      }, []);
+    return () => unsubscribe();
+  }, []);
 
-       if (loading) {
-          return (
-            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-              <ActivityIndicator size="large" color="blue" />
-            </View>
-          );
-        }
-        if (!user) {
-            return (
-             <NavigationContainer>
-                                            <Stack.Navigator initialRouteName="Login">
-                                              <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }}/>
-                                              <Stack.Screen name="Main" component={MainContainer} options={{ headerShown: false }}/>
-                                              <Stack.Screen name="Register" component={Register} options={{ headerShown: false }}/>
-                                            </Stack.Navigator>
-                                      </NavigationContainer>
-            )
-          }
-
-
-           return (
-                <NavigationContainer>
-                                 <Stack.Navigator initialRouteName="Main">
-                                   <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }}/>
-                                   <Stack.Screen name="Main" component={MainContainer} options={{ headerShown: false }}/>
-                                 </Stack.Navigator>
-                           </NavigationContainer>
-             );
-
+  if (loading) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" color="blue" />
+      </View>
+    );
+  }
+  if (!user) {
+    return (
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName="Login">
+          <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
+          <Stack.Screen name="Main" component={MainContainer} options={{ headerShown: false }} />
+          <Stack.Screen name="Register" component={Register} options={{ headerShown: false }} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    )
   }
 
-  /*
 
-   return (
-             <NavigationContainer>
-               {user ? <MainContainer /> : <LoginScreen />}
-             </NavigationContainer>
-           );
+  return (
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="Main">
+        <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
+        <Stack.Screen name="Main" component={MainContainer} options={{ headerShown: false }} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
 
-  */
+}
+
+/*
+
+ return (
+           <NavigationContainer>
+             {user ? <MainContainer /> : <LoginScreen />}
+           </NavigationContainer>
+         );
+
+*/
 
 export default App;

@@ -9,7 +9,7 @@ export default function MapScreen({ navigation }) {
   const [locations, setLocations] = useState([]);
 
   const [isOpen, setIsOpen] = useState(false);
-const toggleMenu = () => {
+  const toggleMenu = () => {
     setIsOpen(!isOpen);
   };
 
@@ -47,27 +47,27 @@ const toggleMenu = () => {
 
   return (
     <View style={styles.container}>
-        <View style={styles.dropdownContainer}>
-             <TouchableOpacity onPress={toggleMenu} style={styles.menuButton}>
-                    <Text>☰</Text>
-                  </TouchableOpacity>
+      <View style={styles.dropdownContainer}>
+        <TouchableOpacity onPress={toggleMenu} style={styles.menuButton}>
+          <Text>☰</Text>
+        </TouchableOpacity>
 
-                   {/* Menú desplegable */}
-                        {isOpen && (
-                          <View style={styles.menu}>
-                            {options.map((option, index) => (
-                              <TouchableOpacity
-                                key={index}
-                                onPress={() => console.log(`${option} seleccionada`)}
-                              >
-                                <Text>{option}</Text>
-                              </TouchableOpacity>
-                            ))}
-                          </View>
-                        )}
-        </View>
+        {/* Menú desplegable */}
+        {isOpen && (
+          <View style={styles.menu}>
+            {options.map((option, index) => (
+              <TouchableOpacity
+                key={index}
+                onPress={() => console.log(`${option} seleccionada`)}
+              >
+                <Text>{option}</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+        )}
+      </View>
 
-        <MapView
+      <MapView
         style={styles.map}
         onRegionChange={onRegionChange}
         initialRegion={{
@@ -98,10 +98,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 
-  map:  {
-               width: '100%',
-               height: '100%',
-           },
+  map: {
+    width: '100%',
+    height: '100%',
+  },
 
   dropdownContainer: {
     position: 'absolute',
