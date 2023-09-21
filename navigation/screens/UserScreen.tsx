@@ -87,7 +87,7 @@ export default function UserScreen({ navigation }) {
   };
 
   const checkCreds = async () => {
-    const q = query(collection(db, "Empresas", GlobalValues.getEmpresaUID(), "Usuarios"), where('Nombre', '==', nom));
+    const q = query(collection(db, "Empresas", GlobalValues.getEmpresaUID(), "Usuarios"), where('Nombre', '==', nom), where('Contrasena', '==', pwd));
 
     const querySnapshot = await getDocs(q);
 
