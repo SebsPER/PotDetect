@@ -5,8 +5,9 @@ import { Camera, CameraType } from 'expo-camera';
 import FormData from 'form-data';
 import * as FileSystem from 'expo-file-system';
 import * as Location from 'expo-location';
-import { deleteDoc, doc, getDoc, setDoc, collection, addDoc } from 'firebase/firestore';
+import { deleteDoc, doc, getDoc, setDoc, collection, addDoc, getDocs } from 'firebase/firestore';
 import { db } from '../../firebaseConfig';
+import GlobalValues from '../../utils/GlobalValues.tsx';
 
 const blurhash =
   '|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[';
@@ -14,7 +15,9 @@ const blurhash =
 export default function ObjectDetector({ navigation }) {
   const [type, setType] = useState(CameraType.back);
   const [permission, requestPermission] = Camera.useCameraPermissions();
+  const [selectedProyecto, setSelectedProyecto] = useState(null);
 
+  const [projects, setProjects] = useState([]);
   const [capturedImageUri, setCapturedImageUri] = useState('');
   const [responseData, setResponseData] = useState('');
   const [baseImg, setbaseImg] = useState('');
@@ -29,10 +32,14 @@ export default function ObjectDetector({ navigation }) {
   const toggleMenu = () => {
     setIsOpen(!isOpen);
   };
-  const options = ['Opción 1', 'Opción 2', 'Opción 3'];
-  //
 
   useEffect(() => {
+  const getProyectos = async () => {
+          const proyectos = await fetchListFromFirestore();
+          setProjects(proyectos)
+          };
+
+    getProyectos();
     (async () => {
 
       let { status } = await Location.requestForegroundPermissionsAsync();
@@ -47,6 +54,26 @@ export default function ObjectDetector({ navigation }) {
       //console.log(location);
     })();
   }, []);
+
+
+  const fetchListFromFirestore = async () => {
+      console.log("entro");
+
+      const Proyecto = await getDocs(collection(db, 'Empresas', GlobalValues.getEmpresaUID(), 'Proyecto'));
+
+      const projects = []
+      Proyecto.forEach((doc) => {
+        const data = doc.data();
+        console.log(doc.id);
+        console.log(data.Nombre);
+        projects.push({
+          id: doc.id,
+          name: data.Nombre,
+        });
+      });
+      console.log(projects)
+      return projects
+    };
 
 
   if (!permission) {
@@ -74,12 +101,14 @@ export default function ObjectDetector({ navigation }) {
     const loc = await Location.getCurrentPositionAsync({ accuracy: 4 });
     setLocation(loc.coords);
 
+
+
     try {
       // Defining image URI
       const imageUri = photo.uri;
 
       //const apiUrl = 'http://localhost:5000/media/upload'
-      const apiUrl = 'http://127.0.0.1:5000/media/upload'; // Replace with your API endpoint URL
+      const apiUrl = 'http://192.168.1.9:5000/media/upload'; // Replace with your API endpoint URL
 
       const name_ = photo.uri.split('/').pop();
 
@@ -111,9 +140,12 @@ export default function ObjectDetector({ navigation }) {
   };
 
   const save_detection = async () => {
-    if (responseData.Hueco != 0 && responseData.HuecoGrave != 0 && responseData.Grieta != 0) {
+    if (responseData.Hueco != 0 || responseData.HuecoGrave != 0 || responseData.Grieta != 0) {
+
+    console.log(GlobalValues.getEmpresaUID())
+    console.log(GlobalValues.getProyectoUID())
       try {
-        const docRef = await addDoc(collection(db, "Detections"), {
+        const docRef = await addDoc(collection(db, "Empresas",GlobalValues.getEmpresaUID() , 'Proyecto', GlobalValues.getProyectoUID(),'Registro'), {
           latitude: location.latitude,
           longitude: location.longitude,
           title: 'deteccion',
@@ -131,6 +163,17 @@ export default function ObjectDetector({ navigation }) {
     }
   }
 
+  const onProyectoSelect = async  (proyectoUid) => {
+      console.log(proyectoUid)
+      GlobalValues.setProyectoUID(proyectoUid)
+      const a =GlobalValues.getProyectoUID()
+      console.log("a", a)
+      setSelectedProyecto(proyectoUid);
+      setIsOpen(false); // Cierra el menú desplegable al seleccionar un proyecto
+      //const fetchedLocations = await fetchLocationsFromFirestore(proyectoUid);
+      //setLocations(fetchedLocations);
+       };
+
   return (
     <View style={styles.container}>
 
@@ -142,12 +185,12 @@ export default function ObjectDetector({ navigation }) {
         {/* Menú desplegable */}
         {isOpen && (
           <View style={styles.menu}>
-            {options.map((option, index) => (
+            {projects.map((projects) => (
               <TouchableOpacity
-                key={index}
-                onPress={() => console.log(`${option} seleccionada`)}
+                key={projects.id}
+                onPress={() => onProyectoSelect(projects.id)}
               >
-                <Text>{option}</Text>
+                <Text>{projects.name}</Text>
               </TouchableOpacity>
             ))}
           </View>

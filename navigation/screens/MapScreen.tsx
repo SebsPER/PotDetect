@@ -4,31 +4,61 @@ import MapView, { Marker } from 'react-native-maps';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../../firebaseConfig';
 import RNPickerSelect from 'react-native-picker-select';
+import GlobalValues from '../../utils/GlobalValues.tsx';
 
 export default function MapScreen({ navigation }) {
+ const [projects, setProjects] = useState([]);
   const [locations, setLocations] = useState([]);
+  const [selectedProyecto, setSelectedProyecto] = useState(null);
 
   const [isOpen, setIsOpen] = useState(false);
+
   const toggleMenu = () => {
     setIsOpen(!isOpen);
   };
 
-  const options = ['Opción 1', 'Opción 2', 'Opción 3'];
-
   useEffect(() => {
-    const getLocations = async () => {
-      const fetchedLocations = await fetchLocationsFromFirestore();
-      setLocations(fetchedLocations);
+    const getProyectos = async () => {
+        const proyectos = await fetchListFromFirestore();
+        setProjects(proyectos)
+      //const fetchedLocations = await fetchLocationsFromFirestore();
+      //setLocations(fetchedLocations);
     };
-
-    getLocations();
+    getProyectos();
   }, []);
 
-  const fetchLocationsFromFirestore = async () => {
-    const querySnapshot = await getDocs(collection(db, "Detections"));
+  const fetchListFromFirestore = async () => {
+      //console.log("entro");
+      ///para pruebas
+      //const querySnapshot = await getDocs(collection(db, "Proyectos"));
+
+      const Proyecto = await getDocs(collection(db, 'Empresas', GlobalValues.getEmpresaUID(), 'Proyecto'));
+
+      const projects = []
+      Proyecto.forEach((doc) => {
+        const data = doc.data();
+        console.log(doc.id);
+        console.log(data.Nombre);
+        projects.push({
+          id: doc.id,
+          name: data.Nombre,
+        });
+      });
+      console.log(projects)
+      return projects
+    };
+
+  const fetchLocationsFromFirestore = async (proyectoUid) => {
+console.log(proyectoUid)
+    const querySnapshot = await getDocs(collection(db, 'Empresas', GlobalValues.getEmpresaUID(), 'Proyecto', proyectoUid, 'Registro'));
     const locations = [];
     querySnapshot.forEach((doc) => {
       const data = doc.data();
+
+        console.log(doc.title);
+        console.log(data.latitude);
+        console.log(data.longitude);
+        console.log(data.description);
       locations.push({
         title: data.title,
         location: {
@@ -38,11 +68,20 @@ export default function MapScreen({ navigation }) {
         description: data.description,
       });
     });
+      console.log(locations)
     return locations;
   };
 
+  const onProyectoSelect = async  (proyectoUid) => {
+    console.log(proyectoUid)
+    setSelectedProyecto(proyectoUid);
+    setIsOpen(false); // Cierra el menú desplegable al seleccionar un proyecto
+    const fetchedLocations = await fetchLocationsFromFirestore(proyectoUid);
+    setLocations(fetchedLocations);
+     };
+
   const onRegionChange = (region) => {
-    console.log(region);
+    //console.log(region);
   };
 
   return (
@@ -55,12 +94,12 @@ export default function MapScreen({ navigation }) {
         {/* Menú desplegable */}
         {isOpen && (
           <View style={styles.menu}>
-            {options.map((option, index) => (
+            {projects.map((projects) => (
               <TouchableOpacity
-                key={index}
-                onPress={() => console.log(`${option} seleccionada`)}
+                key={projects.id}
+                onPress={() => onProyectoSelect(projects.id)}
               >
-                <Text>{option}</Text>
+                <Text>{projects.name}</Text>
               </TouchableOpacity>
             ))}
           </View>

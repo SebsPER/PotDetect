@@ -24,7 +24,7 @@ export default function RegisterScreen({ navigation }) {
   const fetchListFromFirestore = async () => {
     console.log("Register", GlobalValues.getProyectoUID());
 
-    const querySnapshot = await getDocs(collection(db, "Empresas", '5pRvm5sLFIfzKnxYuArF', 'proyectos', GlobalValues.getProyectoUID(), 'Registro'));
+    const querySnapshot = await getDocs(collection(db, "Empresas", GlobalValues.getEmpresaUID(), 'proyectos', GlobalValues.getProyectoUID(), 'Registro'));
     const detections = []
     querySnapshot.forEach((doc) => {
       const data = doc.data();

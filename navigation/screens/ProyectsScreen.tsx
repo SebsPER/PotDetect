@@ -20,6 +20,7 @@ export default function ProyectsScreen({ navigation }) {
 
   const fetchListFromFirestore = async () => {
     console.log("entro");
+    console.log("asd",GlobalValues.getEmpresaUID())
     ///para pruebas
     //const querySnapshot = await getDocs(collection(db, "Proyectos"));
 

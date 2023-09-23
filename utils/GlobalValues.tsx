@@ -13,8 +13,8 @@ class GlobalValues {
     }
 
   static setProyectoUID(proyectoUID) {
-    this.values.proyectoUID = proyectoUID;
-    console.log("valor uid project",this.values.proyectoUID);
+    this.values.work_proyectoUID = proyectoUID;
+    console.log("valor uid project",this.values.work_proyectoUID);
   }
 
   static getProyectoUID() {
