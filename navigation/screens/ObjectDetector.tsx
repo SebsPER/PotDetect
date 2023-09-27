@@ -6,8 +6,9 @@ import FormData from 'form-data';
 import * as FileSystem from 'expo-file-system';
 import * as Location from 'expo-location';
 import { deleteDoc, doc, getDoc, setDoc, collection, addDoc, getDocs } from 'firebase/firestore';
-import { getStorage, ref, uploadString } from "firebase/storage";
+import { ref, uploadBytes } from "firebase/storage";
 import { db, storage } from '../../firebaseConfig';
+import uuid from 'react-native-uuid';
 import GlobalValues from '../../utils/GlobalValues.tsx';
 
 
@@ -108,7 +109,7 @@ export default function ObjectDetector({ navigation }) {
       const imageUri = photo.uri;
 
       //const apiUrl = 'http://localhost:5000/media/upload'
-      const apiUrl = 'http://10.11.156.143:5000/media/upload'; // Replace with your API endpoint URL
+      const apiUrl = 'http://192.168.1.10:5000/media/upload'; // Replace with your API endpoint URL
 
       const name_ = photo.uri.split('/').pop();
 
@@ -156,15 +157,26 @@ export default function ObjectDetector({ navigation }) {
         });
         console.log("Document written with ID: ", docRef.id);
         
-        // const uri = FileSystem.cacheDirectory + 'signature-image-temp.png'
-        // await FileSystem.writeAsStringAsync(
-        //     uri,
-        //     baseImg,
-        //     {
-        //       'encoding': FileSystem.EncodingType.Base64
-        //     }
-        // )
-        // console.log(uri);
+        const uri = FileSystem.cacheDirectory + 'signature-image-temp.png'
+        await FileSystem.writeAsStringAsync(
+            uri,
+            baseImg,
+            {
+              'encoding': FileSystem.EncodingType.Base64
+            }
+        )
+        console.log(uri);
+
+        const img = await fetch(uri);
+        const bytes_blb = await img.blob();
+
+        const storageRef = ref(storage, `${uuid.v4()}.jpg`);
+
+        uploadBytes(storageRef, bytes_blb).then((snapshot) => {
+          console.log('Uploaded a blob or file!');
+          alert('La imagen de la deteccion ha sido guardada')
+        });
+
       } catch (e) {
         console.error("Error adding document: ", e);
       }

@@ -45,21 +45,20 @@ export default function MapScreen({ navigation }) {
           name: data.Nombre,
         });
       });
-      console.log(projects)
       return projects
     };
 
   const fetchLocationsFromFirestore = async (proyectoUid) => {
-    console.log(proyectoUid)
+    
     const querySnapshot = await getDocs(collection(db, 'Empresas', GlobalValues.getEmpresaUID(), 'Proyecto', proyectoUid, 'Registro'));
     const locations = [];
     querySnapshot.forEach((doc) => {
       const data = doc.data();
 
-        console.log(doc.title);
-        console.log(data.latitude);
-        console.log(data.longitude);
-        console.log(data.description);
+        // console.log(doc.title);
+        // console.log(data.latitude);
+        // console.log(data.longitude);
+        // console.log(data.description);
         locations.push({
           title: data.title,
           location: {
@@ -69,7 +68,6 @@ export default function MapScreen({ navigation }) {
           description: data.description,
         });
       });
-    console.log(locations)
     return locations;
   };
 
