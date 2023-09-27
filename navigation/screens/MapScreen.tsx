@@ -10,6 +10,7 @@ export default function MapScreen({ navigation }) {
  const [projects, setProjects] = useState([]);
   const [locations, setLocations] = useState([]);
   const [selectedProyecto, setSelectedProyecto] = useState(null);
+  const [selectedProyectoName, setSelectedProyectoName] = useState("Selecciona un Proyecto");
 
   const [isOpen, setIsOpen] = useState(false);
 
@@ -49,7 +50,7 @@ export default function MapScreen({ navigation }) {
     };
 
   const fetchLocationsFromFirestore = async (proyectoUid) => {
-console.log(proyectoUid)
+    console.log(proyectoUid)
     const querySnapshot = await getDocs(collection(db, 'Empresas', GlobalValues.getEmpresaUID(), 'Proyecto', proyectoUid, 'Registro'));
     const locations = [];
     querySnapshot.forEach((doc) => {
@@ -59,24 +60,26 @@ console.log(proyectoUid)
         console.log(data.latitude);
         console.log(data.longitude);
         console.log(data.description);
-      locations.push({
-        title: data.title,
-        location: {
-          latitude: data.latitude,
-          longitude: data.longitude,
-        },
-        description: data.description,
+        locations.push({
+          title: data.title,
+          location: {
+            latitude: data.latitude,
+            longitude: data.longitude,
+          },
+          description: data.description,
+        });
       });
-    });
-      console.log(locations)
+    console.log(locations)
     return locations;
   };
 
-  const onProyectoSelect = async  (proyectoUid) => {
-    console.log(proyectoUid)
-    setSelectedProyecto(proyectoUid);
+  const onProyectoSelect = async  (proyectoData) => {
+    console.log(proyectoData.id);
+    setSelectedProyecto(proyectoData.id);
+    GlobalValues.setProyectoUID(proyectoData.id);
+    GlobalValues.setWorkProyecto(proyectoData);
     setIsOpen(false); // Cierra el menú desplegable al seleccionar un proyecto
-    const fetchedLocations = await fetchLocationsFromFirestore(proyectoUid);
+    const fetchedLocations = await fetchLocationsFromFirestore(proyectoData.id);
     setLocations(fetchedLocations);
      };
 
@@ -88,7 +91,7 @@ console.log(proyectoUid)
     <View style={styles.container}>
       <View style={styles.dropdownContainer}>
         <TouchableOpacity onPress={toggleMenu} style={styles.menuButton}>
-          <Text>☰</Text>
+          <Text>☰ {GlobalValues.getWorkProyecto(false)}</Text>
         </TouchableOpacity>
 
         {/* Menú desplegable */}
@@ -97,7 +100,7 @@ console.log(proyectoUid)
             {projects.map((projects) => (
               <TouchableOpacity
                 key={projects.id}
-                onPress={() => onProyectoSelect(projects.id)}
+                onPress={() => onProyectoSelect(projects)}
               >
                 <Text>{projects.name}</Text>
               </TouchableOpacity>
@@ -144,7 +147,7 @@ const styles = StyleSheet.create({
 
   dropdownContainer: {
     position: 'absolute',
-    top: 20,
+    top: 50,
     left: 20,
     zIndex: 1,
     backgroundColor: 'white',

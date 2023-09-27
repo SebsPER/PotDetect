@@ -24,8 +24,8 @@ export default function RegisterProyect({ navigation }) {
 
       const Proyecto = await addDoc(collection(db, 'Empresas', GlobalValues.getEmpresaUID(), 'Proyecto'), {
         Nombre: nombre,
-        Descripcion: foto,
-        Foto: descripcion,
+        Descripcion: descripcion,
+        Foto: foto,
         Contador: 0,
       });
 

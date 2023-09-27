@@ -6,8 +6,10 @@ import FormData from 'form-data';
 import * as FileSystem from 'expo-file-system';
 import * as Location from 'expo-location';
 import { deleteDoc, doc, getDoc, setDoc, collection, addDoc, getDocs } from 'firebase/firestore';
-import { db } from '../../firebaseConfig';
+import { getStorage, ref, uploadString } from "firebase/storage";
+import { db, storage } from '../../firebaseConfig';
 import GlobalValues from '../../utils/GlobalValues.tsx';
+
 
 const blurhash =
   '|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[';
@@ -101,14 +103,12 @@ export default function ObjectDetector({ navigation }) {
     const loc = await Location.getCurrentPositionAsync({ accuracy: 4 });
     setLocation(loc.coords);
 
-
-
     try {
       // Defining image URI
       const imageUri = photo.uri;
 
       //const apiUrl = 'http://localhost:5000/media/upload'
-      const apiUrl = 'http://192.168.1.9:5000/media/upload'; // Replace with your API endpoint URL
+      const apiUrl = 'http://10.11.156.143:5000/media/upload'; // Replace with your API endpoint URL
 
       const name_ = photo.uri.split('/').pop();
 
@@ -155,6 +155,16 @@ export default function ObjectDetector({ navigation }) {
           Grietas: responseData.Grieta,
         });
         console.log("Document written with ID: ", docRef.id);
+        
+        // const uri = FileSystem.cacheDirectory + 'signature-image-temp.png'
+        // await FileSystem.writeAsStringAsync(
+        //     uri,
+        //     baseImg,
+        //     {
+        //       'encoding': FileSystem.EncodingType.Base64
+        //     }
+        // )
+        // console.log(uri);
       } catch (e) {
         console.error("Error adding document: ", e);
       }
@@ -163,12 +173,13 @@ export default function ObjectDetector({ navigation }) {
     }
   }
 
-  const onProyectoSelect = async  (proyectoUid) => {
-      console.log(proyectoUid)
-      GlobalValues.setProyectoUID(proyectoUid)
+  const onProyectoSelect = async  (proyectoData) => {
+      console.log(proyectoData.id)
+      GlobalValues.setProyectoUID(proyectoData.id)
+      GlobalValues.setWorkProyecto(proyectoData);
       const a =GlobalValues.getProyectoUID()
       console.log("a", a)
-      setSelectedProyecto(proyectoUid);
+      setSelectedProyecto(proyectoData.id);
       setIsOpen(false); // Cierra el menú desplegable al seleccionar un proyecto
       //const fetchedLocations = await fetchLocationsFromFirestore(proyectoUid);
       //setLocations(fetchedLocations);
@@ -179,7 +190,7 @@ export default function ObjectDetector({ navigation }) {
 
       <View style={styles.dropdownContainer}>
         <TouchableOpacity onPress={toggleMenu} style={styles.menuButton}>
-          <Text>☰</Text>
+          <Text>☰ {GlobalValues.getWorkProyecto(false)}</Text>
         </TouchableOpacity>
 
         {/* Menú desplegable */}
@@ -188,7 +199,7 @@ export default function ObjectDetector({ navigation }) {
             {projects.map((projects) => (
               <TouchableOpacity
                 key={projects.id}
-                onPress={() => onProyectoSelect(projects.id)}
+                onPress={() => onProyectoSelect(projects)}
               >
                 <Text>{projects.name}</Text>
               </TouchableOpacity>
@@ -289,7 +300,7 @@ const styles = StyleSheet.create({
   },
   dropdownContainer: {
     position: 'absolute',
-    top: 20,
+    top: 50,
     left: 20,
     zIndex: 1,
     backgroundColor: 'white',

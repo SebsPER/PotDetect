@@ -6,17 +6,32 @@ import { useNavigation } from '@react-navigation/native';
 import { collection, getDocs } from 'firebase/firestore';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import GlobalValues from '../../utils/GlobalValues.tsx';
+import { useFocusEffect } from '@react-navigation/native';
 
 export default function ProyectsScreen({ navigation }) {
   const [projects, setProjects] = useState([]);
+  const [selProy, setSelProy] = useState("");
 
-  useEffect(() => {
-    const getList = async () => {
-      const fetchedList = await fetchListFromFirestore();
-      setProjects(fetchedList);
-    };
-    getList();
-  }, []);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const getList = async () => {
+        const fetchedList = await fetchListFromFirestore();
+        setProjects(fetchedList);
+      };
+      getList();
+      return () => {
+        setProjects([])
+      }
+    }, [])
+  );
+  // useEffect(() => {
+  //   const getList = async () => {
+  //     const fetchedList = await fetchListFromFirestore();
+  //     setProjects(fetchedList);
+  //   };
+  //   getList();
+  // }, []);
 
   const fetchListFromFirestore = async () => {
     console.log("entro");
@@ -61,6 +76,7 @@ export default function ProyectsScreen({ navigation }) {
             :
             <Ionicons name={'folder-outline'} size={20} color={'grey'} onPress={() => {
               GlobalValues.setWorkProyecto(item);
+              setSelProy(item.name)
             }} />
         }
 
@@ -81,7 +97,7 @@ export default function ProyectsScreen({ navigation }) {
           <Text style={styles.createButtonText}>Crear Nuevo Proyecto</Text>
         </TouchableOpacity>
       </View>
-      <Text>Proyecto seleccionado: {GlobalValues.getWorkProyecto(false)} <Ionicons name={'folder'} size={17} color={'orange'} /></Text>
+      <Text>Proyecto seleccionado: {selProy} <Ionicons name={'folder'} size={17} color={'orange'} /></Text>
       <FlatList
         style={{ marginTop: 15 }}
         data={projects}
