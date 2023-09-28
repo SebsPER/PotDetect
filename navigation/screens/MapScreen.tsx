@@ -1,85 +1,102 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../../firebaseConfig';
 import RNPickerSelect from 'react-native-picker-select';
 import GlobalValues from '../../utils/GlobalValues.tsx';
+import { useFocusEffect } from '@react-navigation/native';
 
 export default function MapScreen({ navigation }) {
- const [projects, setProjects] = useState([]);
+  const [projects, setProjects] = useState([]);
   const [locations, setLocations] = useState([]);
   const [selectedProyecto, setSelectedProyecto] = useState(null);
   const [selectedProyectoName, setSelectedProyectoName] = useState("Selecciona un Proyecto");
 
+  var proy = GlobalValues.getWorkProyecto()
+  var noChange = true
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
   };
 
-  useEffect(() => {
-    const getProyectos = async () => {
-        const proyectos = await fetchListFromFirestore();
-        setProjects(proyectos)
-      //const fetchedLocations = await fetchLocationsFromFirestore();
-      //setLocations(fetchedLocations);
-    };
-    getProyectos();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      // Tu código aquí que se ejecutará cuando cambie 'proy'
+      const proyectos = async () => {
+        const proyectosData = await fetchListFromFirestore();
+        setProjects(proyectosData);
+      };
+
+      proyectos();
+    }, [noChange])
+  );
+  useFocusEffect(
+    useCallback(() => {
+      // Tu código aquí que se ejecutará cuando cambie 'noChange'
+      const fetchLocations = async () => {
+        const fetchedLocations = await fetchLocationsFromFirestore(GlobalValues.getWorkProyecto(true));
+        setLocations(fetchedLocations);
+      };
+
+      fetchLocations();
+    }, [proy])
+  );
 
   const fetchListFromFirestore = async () => {
-      //console.log("entro");
-      ///para pruebas
-      //const querySnapshot = await getDocs(collection(db, "Proyectos"));
+    //console.log("entro");
+    ///para pruebas
+    //const querySnapshot = await getDocs(collection(db, "Proyectos"));
 
-      const Proyecto = await getDocs(collection(db, 'Empresas', GlobalValues.getEmpresaUID(), 'Proyecto'));
+    const Proyecto = await getDocs(collection(db, 'Empresas', GlobalValues.getEmpresaUID(), 'Proyecto'));
 
-      const projects = []
-      Proyecto.forEach((doc) => {
-        const data = doc.data();
-        console.log(doc.id);
-        console.log(data.Nombre);
-        projects.push({
-          id: doc.id,
-          name: data.Nombre,
-        });
+    const projects = []
+    Proyecto.forEach((doc) => {
+      const data = doc.data();
+      console.log(doc.id);
+      console.log(data.Nombre);
+      projects.push({
+        id: doc.id,
+        name: data.Nombre,
       });
-      return projects
-    };
+    });
+    return projects
+  };
 
   const fetchLocationsFromFirestore = async (proyectoUid) => {
-    
+
     const querySnapshot = await getDocs(collection(db, 'Empresas', GlobalValues.getEmpresaUID(), 'Proyecto', proyectoUid, 'Registro'));
     const locations = [];
     querySnapshot.forEach((doc) => {
       const data = doc.data();
 
-        // console.log(doc.title);
-        // console.log(data.latitude);
-        // console.log(data.longitude);
-        // console.log(data.description);
-        locations.push({
-          title: data.title,
-          location: {
-            latitude: data.latitude,
-            longitude: data.longitude,
-          },
-          description: data.description,
-        });
+      // console.log(doc.title);
+      // console.log(data.latitude);
+      // console.log(data.longitude);
+      // console.log(data.description);
+      locations.push({
+        title: data.title,
+        location: {
+          latitude: data.latitude,
+          longitude: data.longitude,
+        },
+        description: data.description,
       });
+    });
     return locations;
   };
 
-  const onProyectoSelect = async  (proyectoData) => {
+  const onProyectoSelect = async (proyectoData) => {
+    GlobalValues.setProyectoUID(proyectoData.id);
     console.log(proyectoData.id);
     setSelectedProyecto(proyectoData.id);
     GlobalValues.setProyectoUID(proyectoData.id);
     GlobalValues.setWorkProyecto(proyectoData);
     setIsOpen(false); // Cierra el menú desplegable al seleccionar un proyecto
-    const fetchedLocations = await fetchLocationsFromFirestore(proyectoData.id);
+    const fetchedLocations = await fetchLocationsFromFirestore(GlobalValues.getWorkProyecto(true));
     setLocations(fetchedLocations);
-     };
+  };
 
   const onRegionChange = (region) => {
     //console.log(region);
