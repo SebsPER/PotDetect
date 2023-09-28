@@ -29,6 +29,7 @@ export default function LoginScreen({ navigation }) {
 
         if (email == data.Correo) {
           GlobalValues.setEmpresaUID(doc.id);
+          GlobalValues.setRefresh();
         }
       });
       navigation.navigate('Main');

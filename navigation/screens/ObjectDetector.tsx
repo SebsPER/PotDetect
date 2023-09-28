@@ -6,12 +6,11 @@ import FormData from 'form-data';
 import * as FileSystem from 'expo-file-system';
 import * as Location from 'expo-location';
 import { deleteDoc, doc, getDoc, setDoc, collection, addDoc, getDocs } from 'firebase/firestore';
-import { ref, uploadBytes } from "firebase/storage";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { db, storage } from '../../firebaseConfig';
 import uuid from 'react-native-uuid';
 import GlobalValues from '../../utils/GlobalValues.tsx';
 import { useFocusEffect } from '@react-navigation/native';
-
 
 const blurhash =
   '|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[';
@@ -31,8 +30,8 @@ export default function ObjectDetector({ navigation }) {
   const [location, setLocation] = useState<Location.LocationObjectCoords>({ "accuracy": 32.18999583376263, "altitude": 157.40081787109375, "altitudeAccuracy": 16.810970306396484, "heading": -1, "latitude": -12.104007595961612, "longitude": -76.99086161121983, "speed": -1 });
   const [errorMsg, setErrorMsg] = useState(null);
 
-  var proy = GlobalValues.getWorkProyecto()
-  var noChange = true
+  var proy = GlobalValues.getWorkProyecto();
+  var noChange = GlobalValues.getRefresh();
   //dropdown
   const [isOpen, setIsOpen] = useState(false);
   const [Title, setTitle] = useState("");
@@ -59,8 +58,6 @@ export default function ObjectDetector({ navigation }) {
 
         const loc = await Location.getCurrentPositionAsync({ accuracy: 4 });
         setLocation(loc.coords);
-        //console.log(loc.coords);
-        //console.log(location);
       })();
 
     }, [noChange])
@@ -129,7 +126,7 @@ export default function ObjectDetector({ navigation }) {
       const imageUri = photo.uri;
 
       //const apiUrl = 'http://localhost:5000/media/upload'
-      const apiUrl = 'http://192.168.1.9:5000/media/upload'; // Replace with your API endpoint URL
+      const apiUrl = 'http://10.11.129.122:5000/media/upload'; // Replace with your API endpoint URL
 
       const name_ = photo.uri.split('/').pop();
 
@@ -165,18 +162,8 @@ export default function ObjectDetector({ navigation }) {
 
       console.log(GlobalValues.getEmpresaUID())
       console.log(GlobalValues.getProyectoUID())
-      try {
-        const docRef = await addDoc(collection(db, "Empresas", GlobalValues.getEmpresaUID(), 'Proyecto', GlobalValues.getProyectoUID(), 'Registro'), {
-          latitude: location.latitude,
-          longitude: location.longitude,
-          title: 'deteccion',
-          description: 'primer intento',
-          Huecos: responseData.Hueco,
-          HuecosGraves: responseData.HuecoGrave,
-          Grietas: responseData.Grieta,
-        });
-        console.log("Document written with ID: ", docRef.id);
 
+      try {
         const uri = FileSystem.cacheDirectory + 'signature-image-temp.png'
         await FileSystem.writeAsStringAsync(
           uri,
@@ -186,16 +173,28 @@ export default function ObjectDetector({ navigation }) {
           }
         )
         console.log(uri);
-
         const img = await fetch(uri);
         const bytes_blb = await img.blob();
+        const fileName = uuid.v4()
+        const storageRef = ref(storage, `${fileName}.jpg`);
 
-        const storageRef = ref(storage, `${uuid.v4()}.jpg`);
+        await uploadBytes(storageRef, bytes_blb);
 
-        uploadBytes(storageRef, bytes_blb).then((snapshot) => {
-          console.log('Uploaded a blob or file!');
-          alert('La imagen de la deteccion ha sido guardada')
+
+        const url = await getDownloadURL(storageRef);
+
+
+        const docRef = await addDoc(collection(db, "Empresas", GlobalValues.getEmpresaUID(), 'Proyecto', GlobalValues.getProyectoUID(), 'Registro'), {
+          latitude: location.latitude,
+          longitude: location.longitude,
+          title: 'deteccion',
+          description: 'primer intento',
+          Huecos: responseData.Hueco,
+          HuecosGraves: responseData.HuecoGrave,
+          Grietas: responseData.Grieta,
+          Url: url
         });
+        console.log("Document written with ID: ", docRef.id);
 
       } catch (e) {
         console.error("Error adding document: ", e);

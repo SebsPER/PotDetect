@@ -7,9 +7,13 @@ class GlobalValues {
     otroValor: null,
     empleadoName: null,
     empleadoID: null,
-    permisos: null
+    permisos: null,
+    refresh: false,
     // Agrega más valores globales según tus necesidades
   };
+  static getRefresh() {
+      return this.values.refresh;
+     }
 
   static getEmpresaUID() {
     return this.values.empresaUID;
@@ -68,6 +72,10 @@ class GlobalValues {
   static setOtroValor(otroValor) {
     this.values.otroValor = otroValor;
   }
+
+   static setRefresh() {
+     this.values.refresh = !this.values.refresh;
+   }
 
   static getOtroValor() {
     return this.values.otroValor;

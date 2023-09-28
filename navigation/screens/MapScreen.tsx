@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../../firebaseConfig';
@@ -13,8 +13,8 @@ export default function MapScreen({ navigation }) {
   const [selectedProyecto, setSelectedProyecto] = useState(null);
   const [selectedProyectoName, setSelectedProyectoName] = useState("Selecciona un Proyecto");
 
-  var proy = GlobalValues.getWorkProyecto()
-  var noChange = true
+  var proy = GlobalValues.getWorkProyecto();
+  var noChange = GlobalValues.getRefresh();
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleMenu = () => {
@@ -82,6 +82,7 @@ export default function MapScreen({ navigation }) {
           longitude: data.longitude,
         },
         description: data.description,
+        Url: data.Url,
       });
     });
     return locations;
@@ -118,6 +119,7 @@ export default function MapScreen({ navigation }) {
                 onPress={() => onProyectoSelect(projects)}
               >
                 <Text>{projects.name}</Text>
+
               </TouchableOpacity>
             ))}
           </View>
@@ -140,7 +142,12 @@ export default function MapScreen({ navigation }) {
             coordinate={location.location}
             title={location.title}
             description={location.description}
-          />
+          >
+            <Image
+              source={{ uri: location.Url }} // Ruta de tu imagen
+              style={{ width: 40, height: 40 }} // Ajusta el tamaño según tus necesidades
+            />
+          </Marker>
         ))}
       </MapView>
     </View>
