@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { View, Text, Button, FlatList, StyleSheet, TouchableOpacity, Modal, Pressable, TextInput } from 'react-native';
+import { View, Text, Button, FlatList, StyleSheet, TouchableOpacity, Modal, Pressable, TextInput, KeyboardAvoidingView, ScrollView } from 'react-native';
 import { getAuth, signOut } from 'firebase/auth'; // Importa las funciones necesarias de Firebase Authentication
 import { auth } from '../../firebaseConfig';
-import {db} from '../../firebaseConfig';
+import { db } from '../../firebaseConfig';
 import { collection, addDoc, getDocs, query, where } from 'firebase/firestore';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import GlobalValues from '../../utils/GlobalValues.tsx';
@@ -19,13 +19,18 @@ export default function UserScreen({ navigation }) {
   const [nom, setNom] = React.useState("");
   const [pwd, setPwd] = React.useState("");
   const [newPerm, setNewPerm] = React.useState("");
+  const [modalVisible, setModalVisible] = React.useState(false);
+  const [nombre, setNombre] = React.useState('');
+  const [contrasena, setContrasena] = React.useState('');
 
   React.useEffect(() => {
+
     const getList = async () => {
       const fetchedList = await fetchListFromFirestore();
       setUsers(fetchedList);
     };
     getList();
+
   }, []);
 
   const fetchListFromFirestore = async () => {
@@ -40,9 +45,9 @@ export default function UserScreen({ navigation }) {
       const data = doc.data();
       users.push({
         id: doc.id,
-        name:data.Nombre,
-        priv:data.Permisos,
-        contra:data.Contrasena
+        name: data.Nombre,
+        priv: data.Permisos,
+        contra: data.Contrasena
       });
     });
     return users
@@ -50,13 +55,14 @@ export default function UserScreen({ navigation }) {
 
   const handleSignOut = async () => {
     try {
+      GlobalValues.setWorkProyectoName('')
       await signOut(auth); // Cierra la sesión del usuario actual
       navigation.navigate('Login'); // Redirecciona a la pantalla de inicio de sesión (Login)
     } catch (error) {
       console.error('Error al cerrar sesión:', error);
     }
   };
-  
+
   const handleItemClick = (item) => {
     setModalLog(true);
     setNom(item.name);
@@ -69,7 +75,7 @@ export default function UserScreen({ navigation }) {
         <Text>{item.priv}</Text>
       </View>
     </TouchableOpacity>
-    );
+  );
 
   const handleCreateUser = () => {
     setModalAgre(true);
@@ -81,7 +87,7 @@ export default function UserScreen({ navigation }) {
       Nombre: newNom,
       Constrasena: newPwd,
       Permisos: parseInt(newPerm)
-     });
+    });
     const fetchedList = await fetchListFromFirestore();
     setUsers(fetchedList);
   };
@@ -113,82 +119,97 @@ export default function UserScreen({ navigation }) {
     setPwd("");
   };
 
+  const handleAgregarEmpleado = () => {
+    setModalVisible(true);
+  };
+
+  const handleGuardarEmpleado = () => {
+    // Aquí puedes agregar la lógica para guardar el empleado en tu base de datos o realizar otras acciones necesarias.
+    // Por ahora, simplemente cerramos el modal.
+    setModalVisible(false);
+  };
+
   return (
-    <View style={styles.container}>      
+    <View style={styles.container}>
       <Modal
-      animationType='slide'
-      transparent={true}
-      visible={modalAgre}
-      onRequestClose={() => {
-        alert("Cerro el modal");
-      }}>
-        <View style={styles.modalView}>
-        <Text>Agregar Nuevo Empleado</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Nombre"
-          placeholderTextColor="#B4B4B4" 
-          onChangeText={(text) => setNewNom(text)}
-          value={newNom}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Contraseña"
-          placeholderTextColor="#B4B4B4" 
-          onChangeText={(text) => setNewPwd(text)}
-          value={newPwd}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Permisos (0 o 1)"
-          placeholderTextColor="#B4B4B4" 
-          onChangeText={(text) => setNewPerm(text)}
-          value={newPerm}
-        />
-          <Pressable style={styles.button}
-            onPress={() => setModalAgre(!modalAgre)}
-          >
-            <Text style={styles.cancelButton}>Cancelar</Text>
-          </Pressable>
-          <Pressable style={styles.button}
-            onPress={() => {
-              addWorker()
-              setModalAgre(!modalAgre)
-            }}
-          >
-            <Text style={styles.addButton}>Agregar</Text>
-          </Pressable>
+        animationType='slide'
+        transparent={true}
+        visible={modalAgre}
+        onRequestClose={() => {
+          alert("Cerro el modal");
+        }}>
+        <View style={styles.modalBackground}>
+          <View style={styles.modalView}>
+            <Text style={styles.modalTitle}>Agregar Nuevo Empleado</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Nombre"
+              placeholderTextColor="#B4B4B4"
+              onChangeText={(text) => setNewNom(text)}
+              value={newNom}
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="Contraseña"
+              placeholderTextColor="#B4B4B4"
+              onChangeText={(text) => setNewPwd(text)}
+              value={newPwd}
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="Permisos (0 o 1)"
+              placeholderTextColor="#B4B4B4"
+              onChangeText={(text) => setNewPerm(text)}
+              value={newPerm}
+            />
+            <Pressable style={styles.button}
+              onPress={() => setModalAgre(!modalAgre)}
+            >
+              <Text style={styles.cancelButton}>Cancelar</Text>
+            </Pressable>
+            <Pressable style={styles.button}
+              onPress={() => {
+                addWorker()
+                setModalAgre(!modalAgre)
+              }}
+            >
+              <Text style={styles.addButton}>Agregar</Text>
+            </Pressable>
+          </View>
         </View>
       </Modal>
       <Modal
-      animationType='slide'
-      transparent={true}
-      visible={modalLog}
-      onRequestClose={() => {
-        alert("Cerro el modal");
-      }}>
-        <View style={styles.modalView}>
-        <Text>Ingresa tus credenciales</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Contraseña"
-          placeholderTextColor="#B4B4B4" 
-          onChangeText={(text) => setPwd(text)}
-          value={pwd}
-        />
-          <Pressable style={styles.button}
-            onPress={() => setModalLog(!modalLog)}
-          >
-            <Text style={styles.cancelButton}>Cancelar</Text>
-          </Pressable>
-          <Pressable style={styles.button}
-            onPress={() => {
-              checkCreds()
-              setModalLog(!modalLog)
-            }}
-          >
-            <Text style={styles.addButton}>Iniciar Sesión</Text>
-          </Pressable>
+        animationType='slide'
+        transparent={true}
+        visible={modalLog}
+        onRequestClose={() => {
+          alert("Cerro el modal");
+        }}>
+
+        <View style={styles.modalBackground}>
+          <View style={styles.modalView}>
+            <Text>Ingresa tus credenciales</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Contraseña"
+              placeholderTextColor="#B4B4B4"
+              onChangeText={(text) => setPwd(text)}
+              value={pwd}
+            />
+            <Pressable style={styles.button}
+              onPress={() => setModalLog(!modalLog)}
+            >
+              <Text style={styles.cancelButton}>Cancelar</Text>
+            </Pressable>
+            <Pressable style={styles.button}
+              onPress={() => {
+                checkCreds()
+                setModalLog(!modalLog)
+              }}
+            >
+              <Text style={styles.addButton}>Iniciar Sesión</Text>
+            </Pressable>
+          </View>
         </View>
       </Modal>
       <View style={styles.header}>
@@ -199,15 +220,15 @@ export default function UserScreen({ navigation }) {
       </View>
       {
         logUser === "" ?
-        <Text>Elige tu perfil</Text>
-        :
-        <Text>¡Bienvenido! {logUser}</Text>
+          <Text>Elige tu perfil</Text>
+          :
+          <Text>¡Bienvenido! {logUser}</Text>
       }
       <FlatList
-           style={{marginTop:15, marginHorizontal:10}}
-           data={users}
-           renderItem={renderUserItem}
-           keyExtractor={(item) => item.id}
+        style={{ marginTop: 15, marginHorizontal: 10 }}
+        data={users}
+        renderItem={renderUserItem}
+        keyExtractor={(item) => item.id}
       />
       <Button title="Cerrar Sesión" onPress={handleSignOut} />
     </View>
@@ -215,47 +236,72 @@ export default function UserScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
+
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+
+  modalContent: {
+    flex: 1,
+  },
+
+  modalBackground: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Fondo semiopaco
+    //justifyContent: 'center',
+    //alignItems: 'center',
+  },
+
   container: {
     flex: 1,
     backgroundColor: '#fff',
+    justifyContent: 'center',
     paddingHorizontal: 16,
     paddingTop: 30
   },
   modalView: {
-    flex:1,
-    marginHorizontal:15,
-    marginVertical:"77%",
-    margin:20,
+    flex: 1,
+    //justifyContent: 'center', // Centrar verticalmente
+    alignItems: 'center', // Centrar horizontalmente
+    maxHeight: 330, // Ajusta este valor según tus necesidades
+    //marginHorizontal:15,
+    //marginVertical:70,
+    margin: 20,
     backgroundColor: 'white',
     borderRadius: 20,
-    padding:35,
-    alignItems:'center',
-    shadowColor:'#000',
+    padding: 20,
+    shadowColor: '#000',
     shadowOffset: {
-      width:0,
-      height:2
+      width: 0,
+      height: 2
     },
-    shadowOpacity:0.25,
-    shadowRadius:4,
-    elevation:5
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5
   },
   ModalAgreTitle: {
-    textAlign:'center',
+    textAlign: 'center',
     fontWeight: 'bold',
     color: '#FF6C5E'
   },
   button: {
-    borderRadius:20,
-    padding:10,
-    elevation:2
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2
   },
   cancelButton: {
-    textAlign:'center',
+    textAlign: 'center',
     fontWeight: 'bold',
+    paddingBottom: 0,
+    borderRadius: 5,
     color: '#B4B4B4'
   },
   addButton: {
-    textAlign:'center',
+    padding: 5,
+    borderRadius: 5,
+    textAlign: 'center',
     fontWeight: 'bold',
     color: '#67A25A'
   },

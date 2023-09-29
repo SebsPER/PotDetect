@@ -12,19 +12,19 @@ class GlobalValues {
     // Agrega más valores globales según tus necesidades
   };
   static getRefresh() {
-      return this.values.refresh;
-     }
+    return this.values.refresh;
+  }
 
   static getEmpresaUID() {
     return this.values.empresaUID;
-    }
-  
+  }
+
   static setEmpleadoName(empleadoData) {
-    this.values.empleadoName= empleadoData.Nombre;
+    this.values.empleadoName = empleadoData.Nombre;
   }
 
   static setPermisos(empleadoData) {
-    this.values.permisos= empleadoData.Permisos;
+    this.values.permisos = empleadoData.Permisos;
   }
 
   static getPermisos() {
@@ -41,7 +41,7 @@ class GlobalValues {
 
   static setProyectoUID(proyectoUID) {
     this.values.work_proyectoUID = proyectoUID;
-    console.log("valor uid project",this.values.work_proyectoUID);
+    console.log("valor uid project", this.values.work_proyectoUID);
   }
 
   static getProyectoUID() {
@@ -51,12 +51,16 @@ class GlobalValues {
   static setWorkProyecto(work_proyecto) {
     this.values.work_proyectoUID = work_proyecto.id;
     this.values.work_proyectoName = work_proyecto.name;
-    console.log("valor uid project",this.values.work_proyectoUID);
-    console.log("valor name project",this.values.work_proyectoName);
+    console.log("valor uid project", this.values.work_proyectoUID);
+    console.log("valor name project", this.values.work_proyectoName);
+  }
+
+  static setWorkProyectoName(work_proyecto) {
+    this.values.work_proyectoName = work_proyecto;
   }
 
   static getWorkProyecto(type) {
-    if (type == true){
+    if (type == true) {
       return this.values.work_proyectoUID;
     }
     else {
@@ -65,17 +69,17 @@ class GlobalValues {
   }
 
   static setEmpresaUID(empresaUID_) {
-      this.values.empresaUID = empresaUID_;
-      console.log(this.values.empresaUID)
-   }
+    this.values.empresaUID = empresaUID_;
+    console.log(this.values.empresaUID)
+  }
 
   static setOtroValor(otroValor) {
     this.values.otroValor = otroValor;
   }
 
-   static setRefresh() {
-     this.values.refresh = !this.values.refresh;
-   }
+  static setRefresh() {
+    this.values.refresh = !this.values.refresh;
+  }
 
   static getOtroValor() {
     return this.values.otroValor;
