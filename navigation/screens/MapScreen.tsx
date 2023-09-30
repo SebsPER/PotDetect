@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image, Modal, TextInput, Pressable } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../../firebaseConfig';
@@ -12,6 +12,15 @@ export default function MapScreen({ navigation }) {
   const [locations, setLocations] = useState([]);
   const [selectedProyecto, setSelectedProyecto] = useState(null);
   const [selectedProyectoName, setSelectedProyectoName] = useState("Selecciona un Proyecto");
+
+  const [modalVisible, setModalVisible] = React.useState(false);
+  const [modalAgre, setModalAgre] = React.useState(false);
+
+  const [grieta, setGrietas] = useState(0);
+  const [hueco, setHueco] = useState(0);
+  const [huecoGrave, setHuecoGrave] = useState(0);
+  const [description, setDescription] = useState("");
+  const [foto, setFoto] = useState("");
 
   var proy = GlobalValues.getWorkProyecto();
   var noChange = GlobalValues.getRefresh();
@@ -77,12 +86,15 @@ export default function MapScreen({ navigation }) {
       // console.log(data.description);
       locations.push({
         title: data.title,
+        Grieta: data.Grietas,
+        Hueco: data.Huecos,
+        HuecoGrave: data.HuecoGraves,
         location: {
           latitude: data.latitude,
           longitude: data.longitude,
         },
         description: data.description,
-        Url: data.Url,
+        foto: data.Url,
       });
     });
     return locations;
@@ -103,8 +115,50 @@ export default function MapScreen({ navigation }) {
     //console.log(region);
   };
 
+  const handleCreateUser = (Grietaa, Huecoo, HuecoGravee, descriptionn, fotoo) => {
+    setGrietas(Grietaa)
+    setHueco(Huecoo)
+    setHuecoGrave(HuecoGravee)
+    setDescription(descriptionn)
+    setFoto(fotoo)
+
+    console.log("Grieta", grieta)
+    console.log("Huecos", hueco)
+    console.log("HuecoGrave", huecoGrave)
+    console.log("description", description)
+    console.log("foto", foto)
+    setModalAgre(true);
+  };
+
   return (
     <View style={styles.container}>
+      <Modal
+        animationType='slide'
+        transparent={true}
+        visible={modalAgre}
+        onRequestClose={() => {
+          alert("Cerro el modal");
+        }}>
+        <View style={styles.modalBackground}>
+          <View style={styles.modalView}>
+            <Text style={styles.modalTitle}>Datos del daño</Text>
+            <Text style={styles.dato}>grieta: {grieta}</Text>
+            <Text style={styles.dato}>hueco: {hueco}</Text>
+            <Text style={styles.dato}>huecoGrave: {huecoGrave}</Text>
+            <Text style={styles.dato}>description: {description}</Text>
+            <Image
+              source={{ uri: foto }}
+              style={styles.modalImage}
+            />
+            <Pressable style={styles.button}
+              onPress={() => setModalAgre(!modalAgre)}
+            >
+              <Text style={styles.cancelButton}>Cancelar</Text>
+            </Pressable>
+
+          </View>
+        </View>
+      </Modal>
       <View style={styles.dropdownContainer}>
         <TouchableOpacity onPress={toggleMenu} style={styles.menuButton}>
           <Text>☰ {GlobalValues.getWorkProyecto(false)}</Text>
@@ -142,11 +196,8 @@ export default function MapScreen({ navigation }) {
             coordinate={location.location}
             title={location.title}
             description={location.description}
+            onPress={() => handleCreateUser(location.Grieta, location.Hueco, location.HuecoGrave, location.description, location.foto)}
           >
-            <Image
-              source={{ uri: location.Url }} // Ruta de tu imagen
-              style={{ width: 40, height: 40 }} // Ajusta el tamaño según tus necesidades
-            />
           </Marker>
         ))}
       </MapView>
@@ -161,10 +212,77 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  modalImage: {
+    width: 200, // Ancho deseado de la imagen
+    height: 200, // Altura deseada de la imagen
+    resizeMode: 'contain', // Puedes ajustar el modo de redimensionamiento según tus necesidades
+    borderRadius: 10, // Bordes redondeados u otros estilos según prefieras
+  },
+  modalContent: {
+    flex: 1,
+  },
+  modalView: {
+    flex: 1,
+    justifyContent: 'center', // Centrar verticalmente
+    alignItems: 'center', // Centrar horizontalmente
+    //maxHeight: 330, // Ajusta este valor según tus necesidades
+    //marginHorizontal:15,
+    //marginVertical:70,
+    margin: 20,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 20,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5
+  },
+  addButton: {
+    padding: 5,
+    borderRadius: 5,
+    textAlign: 'center',
+    fontWeight: 'bold',
+    color: '#67A25A'
+  },
+
+  cancelButton: {
+    textAlign: 'center',
+    fontWeight: 'bold',
+    paddingBottom: 0,
+    borderRadius: 5,
+    color: '#B4B4B4'
+  },
+  button: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2
+  },
+
+  ModalAgreTitle: {
+    textAlign: 'center',
+    fontWeight: 'bold',
+    color: '#FF6C5E'
+  },
+  modalBackground: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Fondo semiopaco
+    //justifyContent: 'center',
+    //alignItems: 'center',
+  },
 
   map: {
     width: '100%',
     height: '100%',
+  },
+  createButton: {
+    backgroundColor: '#FF6C5E',
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderRadius: 8,
   },
 
   dropdownContainer: {
