@@ -23,20 +23,24 @@ export default function RegisterScreen({ navigation }) {
 
   const fetchListFromFirestore = async () => {
     console.log("Register", GlobalValues.getProyectoUID());
+    console.log("Empresas", GlobalValues.getEmpresaUID());
 
-    const querySnapshot = await getDocs(collection(db, "Empresas", GlobalValues.getEmpresaUID(), 'proyectos', GlobalValues.getProyectoUID(), 'Registro'));
+    const querySnapshot = await getDocs(collection(db, "Empresas", GlobalValues.getEmpresaUID(), 'Proyecto', GlobalValues.getProyectoUID(), 'Registro'));
     const detections = []
+
     querySnapshot.forEach((doc) => {
       const data = doc.data();
+      console.log("id",data.id)
       detections.push({
         id: doc.id,
         name: data.title,
         HuecoGrave: data.HuecosGraves,
         Hueco: data.Huecos,
         Grieta: data.Grietas,
-        photo: data.foto
+        photo: data.Url
       });
     });
+    console.log("detection",detections)
     return detections
   };
 
