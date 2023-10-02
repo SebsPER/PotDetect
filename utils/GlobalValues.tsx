@@ -1,6 +1,7 @@
 class GlobalValues {
   static values = {
     proyectoUID: null,
+    list_proyectoUID: null,
     work_proyectoUID: null,
     work_proyectoName: null,
     empresaUID: null,
@@ -11,6 +12,14 @@ class GlobalValues {
     refresh: false,
     // Agrega más valores globales según tus necesidades
   };
+  static getListProy() {
+    return this.values.list_proyectoUID;
+  }
+
+  static setListProy(uid) {
+    this.values.list_proyectoUID = uid;
+  }
+
   static getRefresh() {
     return this.values.refresh;
   }

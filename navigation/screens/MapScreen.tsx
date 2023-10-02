@@ -63,8 +63,6 @@ export default function MapScreen({ navigation }) {
     const projects = []
     Proyecto.forEach((doc) => {
       const data = doc.data();
-      console.log(doc.id);
-      console.log(data.Nombre);
       projects.push({
         id: doc.id,
         name: data.Nombre,
@@ -88,7 +86,7 @@ export default function MapScreen({ navigation }) {
         title: data.title,
         Grieta: data.Grietas,
         Hueco: data.Huecos,
-        HuecoGrave: data.HuecoGraves,
+        HuecoGrave: data.HuecosGraves,
         location: {
           latitude: data.latitude,
           longitude: data.longitude,
@@ -102,7 +100,6 @@ export default function MapScreen({ navigation }) {
 
   const onProyectoSelect = async (proyectoData) => {
     GlobalValues.setProyectoUID(proyectoData.id);
-    console.log(proyectoData.id);
     setSelectedProyecto(proyectoData.id);
     GlobalValues.setProyectoUID(proyectoData.id);
     GlobalValues.setWorkProyecto(proyectoData);
@@ -125,7 +122,6 @@ export default function MapScreen({ navigation }) {
     console.log("Grieta", grieta)
     console.log("Huecos", hueco)
     console.log("HuecoGrave", huecoGrave)
-    console.log("description", description)
     console.log("foto", foto)
     setModalAgre(true);
   };
@@ -145,7 +141,6 @@ export default function MapScreen({ navigation }) {
             <Text style={styles.dato}>grieta: {grieta}</Text>
             <Text style={styles.dato}>hueco: {hueco}</Text>
             <Text style={styles.dato}>huecoGrave: {huecoGrave}</Text>
-            <Text style={styles.dato}>description: {description}</Text>
             <Image
               source={{ uri: foto }}
               style={styles.modalImage}
@@ -213,8 +208,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   modalImage: {
-    width: 200, // Ancho deseado de la imagen
-    height: 200, // Altura deseada de la imagen
+    width: 600, // Ancho deseado de la imagen
+    height: 600, // Altura deseada de la imagen
     resizeMode: 'contain', // Puedes ajustar el modo de redimensionamiento según tus necesidades
     borderRadius: 10, // Bordes redondeados u otros estilos según prefieras
   },
