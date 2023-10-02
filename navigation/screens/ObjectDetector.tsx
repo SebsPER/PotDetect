@@ -126,7 +126,7 @@ export default function ObjectDetector({ navigation }) {
       const imageUri = photo.uri;
 
       //const apiUrl = 'http://localhost:5000/media/upload'
-      const apiUrl = 'http://10.11.156.10:5000/media/upload'; // Replace with your API endpoint URL
+      const apiUrl = 'http://192.168.1.9:5000/media/upload'; // Replace with your API endpoint URL
 
       const name_ = photo.uri.split('/').pop();
 

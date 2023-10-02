@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, Image, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, getDocs, doc, deleteDoc } from 'firebase/firestore';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { db } from '../../firebaseConfig';
 import GlobalValues from '../../utils/GlobalValues.tsx';
 import { useFocusEffect } from '@react-navigation/native';
@@ -21,10 +22,27 @@ export default function RegisterScreen({ navigation }) {
     }, [])
   );
 
-  const fetchListFromFirestore = async () => {
-  
+  const handleDeleteProject = async (projectId) => {
+      //const confirmDelete = window.confirm('¿Estás seguro de que deseas eliminar este proyecto?');
 
-    const querySnapshot = await getDocs(collection(db, "Empresas", GlobalValues.getEmpresaUID(), 'proyectos', GlobalValues.getProyectoUID(), 'Registro'));
+      if (/*confirmDelete*/true) {
+        try {
+          const proyectref = doc(db, 'Empresas', GlobalValues.getEmpresaUID(), 'Proyecto',GlobalValues.getProyectoUIDD(),'Registro',projectId);
+
+           await deleteDoc(proyectref);
+
+          await deleteDoc(proyectref)
+          const updatedProjects = detections.filter((project) => project.id !== projectId);
+          setDetections(updatedProjects);
+        } catch (error) {
+          console.error('Error al eliminar el proyecto:', error);
+        }
+      }
+    };
+
+  const fetchListFromFirestore = async () => {
+
+    const querySnapshot = await getDocs(collection(db, "Empresas", GlobalValues.getEmpresaUID(), 'Proyecto', GlobalValues.getProyectoUIDD(), 'Registro'));
     const detections = []
 
     querySnapshot.forEach((doc) => {
@@ -36,7 +54,7 @@ export default function RegisterScreen({ navigation }) {
         HuecoGrave: data.HuecosGraves,
         Hueco: data.Huecos,
         Grieta: data.Grietas,
-        photo: data.foto
+        photo: data.Url
       });
     });
     console.log("detection",detections)
@@ -54,13 +72,17 @@ export default function RegisterScreen({ navigation }) {
   const renderDetectionItem = ({ item }) => (
     <TouchableOpacity onPress={() => handleItemClick(item)}>
       <View style={styles.detectionItem}>
-        <Image source={{ uri: item.foto }} style={styles.detectionImage} />
+        <Image source={{ uri: item.photo }} style={styles.detectionImage} />
         <View style={styles.detectionInfo}>
           <View style={styles.column}>
             <Text>Hueco Grave: {item.HuecoGrave}</Text>
             <Text>Hueco: {item.Hueco}</Text>
             <Text>Grieta: {item.Grieta}</Text>
           </View>
+           <Text style={styles.projectCounter}></Text>
+                  <TouchableOpacity onPress={() => handleDeleteProject(item.id)}>
+                   <Ionicons name="trash-outline" size={24} color="red" />
+                 </TouchableOpacity>
         </View>
       </View>
     </TouchableOpacity>
@@ -78,6 +100,11 @@ export default function RegisterScreen({ navigation }) {
 };
 
 const styles = StyleSheet.create({
+
+ projectCounter: {
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
   container: {
     flex: 1,
     backgroundColor: '#fff',

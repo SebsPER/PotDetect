@@ -12,6 +12,13 @@ class GlobalValues {
     refresh: false,
     // Agrega más valores globales según tus necesidades
   };
+  static getProyectoUIDD() {
+    return this.values.proyectoUID;
+  }
+
+  static setProyectoUIDD(uid) {
+    this.values.proyectoUID = uid;
+  }
   static getListProy() {
     return this.values.list_proyectoUID;
   }

@@ -3,7 +3,7 @@ import * as React from 'react';
 import { View, Text, Image, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
 import { db } from '../../firebaseConfig';
 import { useNavigation } from '@react-navigation/native';
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, getDocs, deleteDoc, doc } from 'firebase/firestore';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import GlobalValues from '../../utils/GlobalValues.tsx';
 import { useFocusEffect } from '@react-navigation/native';
@@ -33,6 +33,29 @@ export default function ProyectsScreen({ navigation }) {
   //   getList();
   // }, []);
 
+  const handleDeleteProject = async (projectId) => {
+    //const confirmDelete = window.confirm('¿Estás seguro de que deseas eliminar este proyecto?');
+
+    if (/*confirmDelete*/true) {
+      try {
+        const proyectref = doc(db, 'Empresas', GlobalValues.getEmpresaUID(), 'Proyecto',projectId);
+        const registrosCollectionRef = collection(proyectref, 'Registro');
+         const registrosSnapshot = await getDocs(registrosCollectionRef);
+         // Itera sobre los documentos de la colección interna y elimínalos
+             registrosSnapshot.forEach(async (proyectoDoc) => {
+               await deleteDoc(proyectoDoc.ref);
+             });
+              await deleteDoc(proyectref);
+        await deleteDoc(proyectref)
+        const updatedProjects = projects.filter((project) => project.id !== projectId);
+        setProjects(updatedProjects);
+      } catch (error) {
+        console.error('Error al eliminar el proyecto:', error);
+      }
+    }
+  };
+
+
   const fetchListFromFirestore = async () => {
     console.log("entro");
     console.log("asd",GlobalValues.getEmpresaUID())
@@ -57,6 +80,7 @@ export default function ProyectsScreen({ navigation }) {
 
   const handleItemClick = (item) => {
     GlobalValues.setListProy(item.id);
+    GlobalValues.setProyectoUIDD(item.id);
     console.log(`Hiciste clic en ${item.id}`);
     navigation.navigate('Registros');
   };
@@ -70,6 +94,9 @@ export default function ProyectsScreen({ navigation }) {
           <Text style={styles.projectDescription}>{item.description}</Text>
         </View>
         <Text style={styles.projectCounter}>{item.counter}</Text>
+        <TouchableOpacity onPress={() => handleDeleteProject(item.id)}>
+         <Ionicons name="trash-outline" size={24} color="red" />
+       </TouchableOpacity>
       </View>
     </TouchableOpacity>
   );
