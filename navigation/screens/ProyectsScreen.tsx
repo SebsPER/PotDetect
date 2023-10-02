@@ -56,7 +56,7 @@ export default function ProyectsScreen({ navigation }) {
   };
 
   const handleItemClick = (item) => {
-    GlobalValues.setProyectoUID(item.id);
+    GlobalValues.setListProy(item.id);
     console.log(`Hiciste clic en ${item.id}`);
     navigation.navigate('Registros');
   };
@@ -70,16 +70,6 @@ export default function ProyectsScreen({ navigation }) {
           <Text style={styles.projectDescription}>{item.description}</Text>
         </View>
         <Text style={styles.projectCounter}>{item.counter}</Text>
-        {
-          item.name === GlobalValues.getWorkProyecto(false) ?
-            <Ionicons name={'folder'} size={20} color={'orange'} />
-            :
-            <Ionicons name={'folder-outline'} size={20} color={'grey'} onPress={() => {
-              GlobalValues.setWorkProyecto(item);
-              setSelProy(item.name)
-            }} />
-        }
-
       </View>
     </TouchableOpacity>
   );
@@ -97,7 +87,7 @@ export default function ProyectsScreen({ navigation }) {
           <Text style={styles.createButtonText}>Crear Nuevo Proyecto</Text>
         </TouchableOpacity>
       </View>
-      <Text>Proyecto seleccionado: {selProy} <Ionicons name={'folder'} size={17} color={'orange'} /></Text>
+      <Text>Proyecto seleccionado: {GlobalValues.getWorkProyecto(false)}</Text>
       <FlatList
         style={{ marginTop: 15 }}
         data={projects}

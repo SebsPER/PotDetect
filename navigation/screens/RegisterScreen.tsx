@@ -22,10 +22,9 @@ export default function RegisterScreen({ navigation }) {
   );
 
   const fetchListFromFirestore = async () => {
-    console.log("Register", GlobalValues.getProyectoUID());
-    console.log("Empresas", GlobalValues.getEmpresaUID());
+  
 
-    const querySnapshot = await getDocs(collection(db, "Empresas", GlobalValues.getEmpresaUID(), 'Proyecto', GlobalValues.getProyectoUID(), 'Registro'));
+    const querySnapshot = await getDocs(collection(db, "Empresas", GlobalValues.getEmpresaUID(), 'proyectos', GlobalValues.getProyectoUID(), 'Registro'));
     const detections = []
 
     querySnapshot.forEach((doc) => {
@@ -37,7 +36,7 @@ export default function RegisterScreen({ navigation }) {
         HuecoGrave: data.HuecosGraves,
         Hueco: data.Huecos,
         Grieta: data.Grietas,
-        photo: data.Url
+        photo: data.foto
       });
     });
     console.log("detection",detections)
@@ -55,7 +54,7 @@ export default function RegisterScreen({ navigation }) {
   const renderDetectionItem = ({ item }) => (
     <TouchableOpacity onPress={() => handleItemClick(item)}>
       <View style={styles.detectionItem}>
-        <Image source={{ uri: item.photo }} style={styles.detectionImage} />
+        <Image source={{ uri: item.foto }} style={styles.detectionImage} />
         <View style={styles.detectionInfo}>
           <View style={styles.column}>
             <Text>Hueco Grave: {item.HuecoGrave}</Text>

@@ -126,7 +126,7 @@ export default function ObjectDetector({ navigation }) {
       const imageUri = photo.uri;
 
       //const apiUrl = 'http://localhost:5000/media/upload'
-      const apiUrl = 'http://192.168.1.9:5000/media/upload'; // Replace with your API endpoint URL
+      const apiUrl = 'http://10.11.156.10:5000/media/upload'; // Replace with your API endpoint URL
 
       const name_ = photo.uri.split('/').pop();
 
@@ -200,7 +200,8 @@ export default function ObjectDetector({ navigation }) {
         console.error("Error adding document: ", e);
       }
     } else {
-      print("los valores es 0 x eso no se efectua el guardado");
+      console.log("los valores es 0 x eso no se efectua el guardado");
+      alert("No se detectaron daños");
     }
   }
 
@@ -208,8 +209,8 @@ export default function ObjectDetector({ navigation }) {
     console.log(proyectoData.id)
     GlobalValues.setProyectoUID(proyectoData.id)
     GlobalValues.setWorkProyecto(proyectoData);
-    const a = GlobalValues.getProyectoUID()
-    console.log("a", a)
+    // const a = GlobalValues.getProyectoUID()
+    // console.log("a", a)
     setSelectedProyecto(proyectoData.id);
     setIsOpen(false);
     // Cierra el menú desplegable al seleccionar un proyecto
