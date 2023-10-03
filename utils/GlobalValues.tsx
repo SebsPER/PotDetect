@@ -8,7 +8,8 @@ class GlobalValues {
     otroValor: null,
     empleadoName: null,
     empleadoID: null,
-    permisos: null,
+    permisos: true,
+    logged: true,
     refresh: false,
     // Agrega más valores globales según tus necesidades
   };
@@ -40,11 +41,24 @@ class GlobalValues {
   }
 
   static setPermisos(empleadoData) {
-    this.values.permisos = empleadoData.Permisos;
+    if (empleadoData.Permisos == 1 || empleadoData.Permisos == "1") {
+      this.values.permisos = false;
+    }
+    else {
+      this.values.permisos = true;
+    }
   }
 
   static getPermisos() {
     return this.values.permisos;
+  }
+
+  static setLogged() {
+    this.values.logged = false;
+  }
+
+  static getLogged() {
+    return this.values.logged;
   }
 
   static getEmpleadoName() {

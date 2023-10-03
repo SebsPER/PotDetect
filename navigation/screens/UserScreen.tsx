@@ -78,6 +78,13 @@ export default function UserScreen({ navigation }) {
   );
 
   const handleCreateUser = () => {
+    if (GlobalValues.getLogged()) {
+      alert("Ingresa tus credenciales de usuario antes de agregar un empleado")
+      return
+    } else if (GlobalValues.getPermisos()) {
+      alert("No tienes los permisos necesarios para agregar un empleado")
+      return
+    }
     setModalAgre(true);
   };
 
@@ -85,7 +92,7 @@ export default function UserScreen({ navigation }) {
     console.log(GlobalValues.getEmpresaUID());
     const docRef = await addDoc(collection(db, "Empresas", GlobalValues.getEmpresaUID(), "Usuarios"), {
       Nombre: newNom,
-      Constrasena: newPwd,
+      Contrasena: newPwd,
       Permisos: parseInt(newPerm)
     });
     const fetchedList = await fetchListFromFirestore();
@@ -112,9 +119,10 @@ export default function UserScreen({ navigation }) {
         GlobalValues.setEmpleadoName(doc.data());
         GlobalValues.setEmpleadoId(doc);
         GlobalValues.setPermisos(doc.data());
+        GlobalValues.setLogged();
       });
     }
-
+    console.log(GlobalValues.getPermisos());
     setNom("");
     setPwd("");
   };

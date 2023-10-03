@@ -113,6 +113,10 @@ export default function ObjectDetector({ navigation }) {
 
   const __takePicture = async () => {
     if (!cameraRef) return
+    if (GlobalValues.getLogged()) {
+      alert("Ingresa tus credenciales de usuario antes de hacer una detección")
+      return
+    }
     const photo = await cameraRef.current.takePictureAsync()
     //console.log(photo)
     setPhotoTaken(false)

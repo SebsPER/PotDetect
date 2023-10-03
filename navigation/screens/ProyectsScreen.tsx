@@ -35,6 +35,13 @@ export default function ProyectsScreen({ navigation }) {
 
   const handleDeleteProject = async (projectId) => {
     //const confirmDelete = window.confirm('¿Estás seguro de que deseas eliminar este proyecto?');
+    if (GlobalValues.getLogged()) {
+      alert("Ingresa tus credenciales de usuario antes de eliminar un proyecto")
+      return
+    } else if (GlobalValues.getPermisos()) {
+      alert("No tienes los permisos necesarios para eliminar un proyecto")
+      return
+    }
 
     if (/*confirmDelete*/true) {
       try {
@@ -102,6 +109,14 @@ export default function ProyectsScreen({ navigation }) {
   );
 
   const handleCreateProject = () => {
+    console.log(GlobalValues.getPermisos())
+    if (GlobalValues.getLogged()) {
+      alert("Ingresa tus credenciales de usuario antes de crear un proyecto")
+      return
+    } else if (GlobalValues.getPermisos()) {
+      alert("No tienes los permisos necesarios para crear un proyecto")
+      return
+    }
     navigation.navigate('RegistrosP')
     //Aqui se navega a una pestaña para crear un proyecto nuevo
   };
@@ -111,7 +126,7 @@ export default function ProyectsScreen({ navigation }) {
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Proyectos</Text>
         <TouchableOpacity onPress={handleCreateProject} style={styles.createButton}>
-          <Text style={styles.createButtonText}>Crear Nuevo Proyecto</Text>
+          <Text style={styles.createButtonText}>Crear Nuevo Proyecto +</Text>
         </TouchableOpacity>
       </View>
       <Text>Proyecto seleccionado: {GlobalValues.getWorkProyecto(false)}</Text>
@@ -144,6 +159,12 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   createButton: {
+    backgroundColor: '#FF6C5E',
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderRadius: 8,
+  },
+  createButtonDisabled: {
     backgroundColor: '#FF6C5E',
     paddingVertical: 8,
     paddingHorizontal: 16,
