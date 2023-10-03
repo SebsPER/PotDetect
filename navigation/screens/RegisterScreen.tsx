@@ -5,6 +5,9 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { db } from '../../firebaseConfig';
 import GlobalValues from '../../utils/GlobalValues.tsx';
 import { useFocusEffect } from '@react-navigation/native';
+import * as FileSystem from 'expo-file-system';
+import * as Sharing from 'expo-sharing';
+import uuid from 'react-native-uuid';
 
 export default function RegisterScreen({ navigation }) {
   const [detections, setDetections] = useState([]);
@@ -62,12 +65,28 @@ export default function RegisterScreen({ navigation }) {
   };
 
   const handleItemClick = (item) => {
-    // console.log(`Hiciste clic en ${item.nombre}`);
+    console.log(`Intentando descargar imagen`);
+    downloadFromUrl(item.photo)
   };
 
   const handleCreateProject = () => {
     navigation.navigate('Registros')
   };
+
+  const downloadFromUrl = async (url) => {
+    const filename = `${GlobalValues.getWorkProyecto(false)}_${uuid.v4()}.jpg`;
+    const result = await FileSystem.downloadAsync(
+      url,
+      FileSystem.documentDirectory + filename
+    );
+    console.log(result);
+
+    save(result.uri);
+  };
+
+  const save = (uri) => {
+    Sharing.shareAsync(uri);
+  }
 
   const renderDetectionItem = ({ item }) => (
     <TouchableOpacity onPress={() => handleItemClick(item)}>
