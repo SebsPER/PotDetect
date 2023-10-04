@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, Image, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
-import { collection, getDocs, doc, deleteDoc } from 'firebase/firestore';
+import { collection, getDocs, doc, deleteDoc, increment, updateDoc } from 'firebase/firestore';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { db } from '../../firebaseConfig';
 import GlobalValues from '../../utils/GlobalValues.tsx';
@@ -31,12 +31,17 @@ export default function RegisterScreen({ navigation }) {
       if (/*confirmDelete*/true) {
         try {
           const proyectref = doc(db, 'Empresas', GlobalValues.getEmpresaUID(), 'Proyecto',GlobalValues.getProyectoUIDD(),'Registro',projectId);
-
-           await deleteDoc(proyectref);
+          await deleteDoc(proyectref);
 
           await deleteDoc(proyectref)
           const updatedProjects = detections.filter((project) => project.id !== projectId);
           setDetections(updatedProjects);
+
+            const proyRef = doc(db, "Empresas", GlobalValues.getEmpresaUID(), 'Proyecto', GlobalValues.getProyectoUIDD());
+
+                          await updateDoc(proyRef, {
+                            Contador: increment(-1)
+                          });
         } catch (error) {
           console.error('Error al eliminar el proyecto:', error);
         }

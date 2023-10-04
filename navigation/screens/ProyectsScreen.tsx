@@ -62,7 +62,6 @@ export default function ProyectsScreen({ navigation }) {
     }
   };
 
-
   const fetchListFromFirestore = async () => {
     console.log("entro");
     console.log("asd",GlobalValues.getEmpresaUID())

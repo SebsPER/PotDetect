@@ -5,7 +5,7 @@ import { Camera, CameraType } from 'expo-camera';
 import FormData from 'form-data';
 import * as FileSystem from 'expo-file-system';
 import * as Location from 'expo-location';
-import { deleteDoc, doc, getDoc, setDoc, collection, addDoc, getDocs } from 'firebase/firestore';
+import { deleteDoc, doc, getDoc, setDoc, collection, addDoc, getDocs, updateDoc, increment, getCountFromServer } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { db, storage } from '../../firebaseConfig';
 import uuid from 'react-native-uuid';
@@ -113,7 +113,7 @@ export default function ObjectDetector({ navigation }) {
 
   const __takePicture = async () => {
     if (!cameraRef) return
-    if (GlobalValues.getLogged()) {
+    if (/*GlobalValues.getLogged()*/false) {
       alert("Ingresa tus credenciales de usuario antes de hacer una detección")
       return
     }
@@ -181,12 +181,9 @@ export default function ObjectDetector({ navigation }) {
         const bytes_blb = await img.blob();
         const fileName = uuid.v4()
         const storageRef = ref(storage, `${fileName}.jpg`);
-
         await uploadBytes(storageRef, bytes_blb);
 
-
         const url = await getDownloadURL(storageRef);
-
 
         const docRef = await addDoc(collection(db, "Empresas", GlobalValues.getEmpresaUID(), 'Proyecto', GlobalValues.getProyectoUID(), 'Registro'), {
           latitude: location.latitude,
@@ -199,7 +196,11 @@ export default function ObjectDetector({ navigation }) {
           Url: url
         });
         console.log("Document written with ID: ", docRef.id);
+        const proyRef = doc(db, "Empresas", GlobalValues.getEmpresaUID(), 'Proyecto', GlobalValues.getProyectoUID());
 
+                await updateDoc(proyRef, {
+                  Contador: increment(1)
+                });
       } catch (e) {
         console.error("Error adding document: ", e);
       }
