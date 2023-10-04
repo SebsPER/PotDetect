@@ -28,7 +28,7 @@ export default function RegisterProyect({ navigation }) {
         Foto: foto,
         Contador: 0,
       });
-
+      navigation.navigate('Proyect');
     } catch (e) {
       console.error("Error adding document: ", e);
     }
@@ -90,7 +90,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   button: {
-    backgroundColor: 'blue',
+    backgroundColor: '#FF6C5E',
     paddingVertical: 12,
     paddingHorizontal: 24,
     borderRadius: 5,
