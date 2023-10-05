@@ -55,6 +55,14 @@ export default function UserScreen({ navigation }) {
   const handleDeleteProject = async (projectId) => {
     //const confirmDelete = window.confirm('¿Estás seguro de que deseas eliminar este proyecto?');
 
+    if (GlobalValues.getLogged()) {
+      alert("Ingresa tus credenciales de usuario antes de eliminar un proyecto")
+      return
+    } else if (GlobalValues.getPermisos()) {
+      alert("No tienes los permisos necesarios para eliminar un proyecto")
+      return
+    }
+
     if (/*confirmDelete*/true) {
       try {
         const proyectref = doc(db, 'Empresas', GlobalValues.getEmpresaUID(), 'Usuarios', projectId);
