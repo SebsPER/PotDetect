@@ -193,14 +193,15 @@ export default function ObjectDetector({ navigation }) {
           Huecos: responseData.Hueco,
           HuecosGraves: responseData.HuecoGrave,
           Grietas: responseData.Grieta,
-          Url: url
+          Url: url,
+          Path: fileName
         });
         console.log("Document written with ID: ", docRef.id);
         const proyRef = doc(db, "Empresas", GlobalValues.getEmpresaUID(), 'Proyecto', GlobalValues.getProyectoUID());
 
-                await updateDoc(proyRef, {
-                  Contador: increment(1)
-                });
+        await updateDoc(proyRef, {
+          Contador: increment(1)
+        });
       } catch (e) {
         console.error("Error adding document: ", e);
       }

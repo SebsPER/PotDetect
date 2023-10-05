@@ -45,14 +45,14 @@ export default function ProyectsScreen({ navigation }) {
 
     if (/*confirmDelete*/true) {
       try {
-        const proyectref = doc(db, 'Empresas', GlobalValues.getEmpresaUID(), 'Proyecto',projectId);
+        const proyectref = doc(db, 'Empresas', GlobalValues.getEmpresaUID(), 'Proyecto', projectId);
         const registrosCollectionRef = collection(proyectref, 'Registro');
-         const registrosSnapshot = await getDocs(registrosCollectionRef);
-         // Itera sobre los documentos de la colección interna y elimínalos
-             registrosSnapshot.forEach(async (proyectoDoc) => {
-               await deleteDoc(proyectoDoc.ref);
-             });
-              await deleteDoc(proyectref);
+        const registrosSnapshot = await getDocs(registrosCollectionRef);
+        // Itera sobre los documentos de la colección interna y elimínalos
+        registrosSnapshot.forEach(async (proyectoDoc) => {
+          await deleteDoc(proyectoDoc.ref);
+        });
+        await deleteDoc(proyectref);
         await deleteDoc(proyectref)
         const updatedProjects = projects.filter((project) => project.id !== projectId);
         setProjects(updatedProjects);
@@ -64,7 +64,7 @@ export default function ProyectsScreen({ navigation }) {
 
   const fetchListFromFirestore = async () => {
     console.log("entro");
-    console.log("asd",GlobalValues.getEmpresaUID())
+    console.log("asd", GlobalValues.getEmpresaUID())
     ///para pruebas
     //const querySnapshot = await getDocs(collection(db, "Proyectos"));
 
@@ -101,8 +101,8 @@ export default function ProyectsScreen({ navigation }) {
         </View>
         <Text style={styles.projectCounter}>{item.counter}</Text>
         <TouchableOpacity onPress={() => handleDeleteProject(item.id)}>
-         <Ionicons name="trash-outline" size={24} color="red" />
-       </TouchableOpacity>
+          <Ionicons name="trash-outline" size={24} color="red" />
+        </TouchableOpacity>
       </View>
     </TouchableOpacity>
   );

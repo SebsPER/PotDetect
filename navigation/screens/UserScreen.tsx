@@ -3,7 +3,7 @@ import { View, Text, Button, FlatList, StyleSheet, TouchableOpacity, Modal, Pres
 import { getAuth, signOut } from 'firebase/auth'; // Importa las funciones necesarias de Firebase Authentication
 import { auth } from '../../firebaseConfig';
 import { db } from '../../firebaseConfig';
-import { collection, addDoc, getDocs, query, where } from 'firebase/firestore';
+import { collection, addDoc, getDocs, query, where, doc, deleteDoc } from 'firebase/firestore';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import GlobalValues from '../../utils/GlobalValues.tsx';
 
@@ -20,18 +20,17 @@ export default function UserScreen({ navigation }) {
   const [pwd, setPwd] = React.useState("");
   const [newPerm, setNewPerm] = React.useState("");
   const [modalVisible, setModalVisible] = React.useState(false);
-  const [nombre, setNombre] = React.useState('');
-  const [contrasena, setContrasena] = React.useState('');
+  const [valid, setValid] = React.useState(false);
 
   React.useEffect(() => {
-
+    console.log("useefetc")
     const getList = async () => {
       const fetchedList = await fetchListFromFirestore();
       setUsers(fetchedList);
     };
     getList();
 
-  }, []);
+  }, [valid]);
 
   const fetchListFromFirestore = async () => {
     console.log("entro");
@@ -53,6 +52,25 @@ export default function UserScreen({ navigation }) {
     return users
   };
 
+  const handleDeleteProject = async (projectId) => {
+    //const confirmDelete = window.confirm('¿Estás seguro de que deseas eliminar este proyecto?');
+
+    if (/*confirmDelete*/true) {
+      try {
+        const proyectref = doc(db, 'Empresas', GlobalValues.getEmpresaUID(), 'Usuarios', projectId);
+        await deleteDoc(proyectref);
+
+
+        const user = users.filter((project) => project.id !== projectId);
+        setUsers(user);
+        setValid(!valid);
+
+      } catch (error) {
+        console.error('Error al eliminar el proyecto:', error);
+      }
+    }
+  };
+
   const handleSignOut = async () => {
     try {
       GlobalValues.setWorkProyectoName('')
@@ -68,11 +86,32 @@ export default function UserScreen({ navigation }) {
     setNom(item.name);
   };
 
+  const getPrivilegeLabel = (privValue) => {
+    if (privValue === 0) {
+      return "Empleado";
+    } else if (privValue === 1) {
+      return "Admin";
+    }
+    // Puedes agregar más casos si es necesario
+    return "Desconocido";
+  };
+
   const renderUserItem = ({ item }) => (
     <TouchableOpacity onPress={() => handleItemClick(item)}>
       <View style={styles.list}>
-        <Text>{item.name}</Text>
-        <Text>{item.priv}</Text>
+        <View style={styles.itemContainer}>
+          <Text style={styles.nameText}>{item.name}</Text>
+
+        </View>
+        <View style={styles.itemContainer}>
+          <Text style={styles.projectCounter}>{getPrivilegeLabel(item.priv)}</Text>
+          <TouchableOpacity
+            style={styles.deleteButton}
+            onPress={() => handleDeleteProject(item.id)}
+          >
+            <Ionicons name="trash-outline" size={24} color="red" />
+          </TouchableOpacity>
+        </View>
       </View>
     </TouchableOpacity>
   );
@@ -96,6 +135,7 @@ export default function UserScreen({ navigation }) {
       Permisos: parseInt(newPerm)
     });
     const fetchedList = await fetchListFromFirestore();
+    setValid(!valid);
     setUsers(fetchedList);
   };
 
@@ -250,6 +290,10 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 10,
   },
+  projectCounter: {
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
 
   modalContent: {
     flex: 1,
@@ -260,6 +304,19 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.5)', // Fondo semiopaco
     //justifyContent: 'center',
     //alignItems: 'center',
+  },
+  itemContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    // Estilos para el contenedor del nombre y priv
+    // ...otros estilos si los tienes
+  },
+  privContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    // Estilos para el contenedor de priv y el botón de eliminación
+    // ...otros estilos si los tienes
   },
 
   container: {

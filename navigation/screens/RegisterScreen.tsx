@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, Image, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
 import { collection, getDocs, doc, deleteDoc, increment, updateDoc } from 'firebase/firestore';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { db } from '../../firebaseConfig';
+import { db, storage } from '../../firebaseConfig';
+import { getStorage, ref, listAll, deleteObject } from "firebase/storage";
 import GlobalValues from '../../utils/GlobalValues.tsx';
 import { useFocusEffect } from '@react-navigation/native';
 import * as FileSystem from 'expo-file-system';
@@ -25,28 +26,31 @@ export default function RegisterScreen({ navigation }) {
     }, [])
   );
 
-  const handleDeleteProject = async (projectId) => {
-      //const confirmDelete = window.confirm('¿Estás seguro de que deseas eliminar este proyecto?');
+  const handleDeleteRegister = async (registerId, imagePath) => {
+    //const confirmDelete = window.confirm('¿Estás seguro de que deseas eliminar este proyecto?');
 
-      if (/*confirmDelete*/true) {
-        try {
-          const proyectref = doc(db, 'Empresas', GlobalValues.getEmpresaUID(), 'Proyecto',GlobalValues.getProyectoUIDD(),'Registro',projectId);
-          await deleteDoc(proyectref);
+    if (/*confirmDelete*/true) {
+      try {
 
-          await deleteDoc(proyectref)
-          const updatedProjects = detections.filter((project) => project.id !== projectId);
-          setDetections(updatedProjects);
+        const storageRef = ref(storage, imagePath + '.jpg');
+        await deleteObject(storageRef);
 
-            const proyRef = doc(db, "Empresas", GlobalValues.getEmpresaUID(), 'Proyecto', GlobalValues.getProyectoUIDD());
+        const registroref = doc(db, 'Empresas', GlobalValues.getEmpresaUID(), 'Proyecto', GlobalValues.getProyectoUIDD(), 'Registro', registerId);
+        await deleteDoc(registroref);
 
-                          await updateDoc(proyRef, {
-                            Contador: increment(-1)
-                          });
-        } catch (error) {
-          console.error('Error al eliminar el proyecto:', error);
-        }
+        const updatedRegister = detections.filter((project) => project.id !== registerId);
+        setDetections(updatedRegister);
+
+        const proyRef = doc(db, "Empresas", GlobalValues.getEmpresaUID(), 'Proyecto', GlobalValues.getProyectoUIDD());
+
+        await updateDoc(proyRef, {
+          Contador: increment(-1)
+        });
+      } catch (error) {
+        console.error('Error al eliminar el proyecto:', error);
       }
-    };
+    }
+  };
 
   const fetchListFromFirestore = async () => {
 
@@ -55,17 +59,18 @@ export default function RegisterScreen({ navigation }) {
 
     querySnapshot.forEach((doc) => {
       const data = doc.data();
-      console.log("id",data.id)
+      console.log("id", data.id)
       detections.push({
         id: doc.id,
         name: data.title,
         HuecoGrave: data.HuecosGraves,
         Hueco: data.Huecos,
         Grieta: data.Grietas,
-        photo: data.Url
+        photo: data.Url,
+        Path: data.Path
       });
     });
-    console.log("detection",detections)
+    console.log("detection", detections)
     return detections
   };
 
@@ -103,10 +108,10 @@ export default function RegisterScreen({ navigation }) {
             <Text>Hueco: {item.Hueco}</Text>
             <Text>Grieta: {item.Grieta}</Text>
           </View>
-           <Text style={styles.projectCounter}></Text>
-                  <TouchableOpacity onPress={() => handleDeleteProject(item.id)}>
-                   <Ionicons name="trash-outline" size={24} color="red" />
-                 </TouchableOpacity>
+          <Text style={styles.projectCounter}></Text>
+          <TouchableOpacity onPress={() => handleDeleteRegister(item.id, item.Path)}>
+            <Ionicons name="trash-outline" size={24} color="red" />
+          </TouchableOpacity>
         </View>
       </View>
     </TouchableOpacity>
@@ -125,7 +130,7 @@ export default function RegisterScreen({ navigation }) {
 
 const styles = StyleSheet.create({
 
- projectCounter: {
+  projectCounter: {
     fontSize: 16,
     fontWeight: 'bold',
   },
