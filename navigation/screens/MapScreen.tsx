@@ -21,6 +21,7 @@ export default function MapScreen({ navigation }) {
   const [huecoGrave, setHuecoGrave] = useState(0);
   const [description, setDescription] = useState("");
   const [foto, setFoto] = useState("");
+  const [Usuario, setUserName] = useState("");
 
   var proy = GlobalValues.getWorkProyecto();
   var noChange = GlobalValues.getRefresh();
@@ -93,6 +94,7 @@ export default function MapScreen({ navigation }) {
         },
         description: data.description,
         foto: data.Url,
+        Usuario: data.Usuario
       });
     });
     return locations;
@@ -112,17 +114,14 @@ export default function MapScreen({ navigation }) {
     //console.log(region);
   };
 
-  const handleCreateUser = (Grietaa, Huecoo, HuecoGravee, descriptionn, fotoo) => {
+  const handleCreateUser = (Grietaa, Huecoo, HuecoGravee, descriptionn, fotoo, Usuario) => {
     setGrietas(Grietaa)
     setHueco(Huecoo)
     setHuecoGrave(HuecoGravee)
     setDescription(descriptionn)
     setFoto(fotoo)
+    setUserName(Usuario)
 
-    console.log("Grieta", grieta)
-    console.log("Huecos", hueco)
-    console.log("HuecoGrave", huecoGrave)
-    console.log("foto", foto)
     setModalAgre(true);
   };
 
@@ -138,6 +137,7 @@ export default function MapScreen({ navigation }) {
         <View style={styles.modalBackground}>
           <View style={styles.modalView}>
             <Text style={styles.modalTitle}>Datos del daño</Text>
+            <Text style={styles.dato}>Usuario: {grieta}</Text>
             <Text style={styles.dato}>grieta: {grieta}</Text>
             <Text style={styles.dato}>hueco: {hueco}</Text>
             <Text style={styles.dato}>huecoGrave: {huecoGrave}</Text>
@@ -191,7 +191,7 @@ export default function MapScreen({ navigation }) {
             coordinate={location.location}
             title={location.title}
             description={location.description}
-            onPress={() => handleCreateUser(location.Grieta, location.Hueco, location.HuecoGrave, location.description, location.foto)}
+            onPress={() => handleCreateUser(location.Grieta, location.Hueco, location.HuecoGrave, location.description, location.foto, location.Usuario)}
           >
           </Marker>
         ))}

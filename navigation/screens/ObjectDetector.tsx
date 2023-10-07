@@ -194,7 +194,8 @@ export default function ObjectDetector({ navigation }) {
           HuecosGraves: responseData.HuecoGrave,
           Grietas: responseData.Grieta,
           Url: url,
-          Path: fileName
+          Path: fileName,
+          Usuario: GlobalValues.getEmpleadoName()
         });
         console.log("Document written with ID: ", docRef.id);
         const proyRef = doc(db, "Empresas", GlobalValues.getEmpresaUID(), 'Proyecto', GlobalValues.getProyectoUID());

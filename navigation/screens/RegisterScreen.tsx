@@ -67,7 +67,8 @@ export default function RegisterScreen({ navigation }) {
         Hueco: data.Huecos,
         Grieta: data.Grietas,
         photo: data.Url,
-        Path: data.Path
+        Path: data.Path,
+        Usuario: data.Usuario
       });
     });
     console.log("detection", detections)
@@ -104,6 +105,7 @@ export default function RegisterScreen({ navigation }) {
         <Image source={{ uri: item.photo }} style={styles.detectionImage} />
         <View style={styles.detectionInfo}>
           <View style={styles.column}>
+            <Text>Usiario: {item.Usuario}</Text>
             <Text>Hueco Grave: {item.HuecoGrave}</Text>
             <Text>Hueco: {item.Hueco}</Text>
             <Text>Grieta: {item.Grieta}</Text>
