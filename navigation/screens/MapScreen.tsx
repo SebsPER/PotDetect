@@ -208,8 +208,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   modalImage: {
-    width: 200, // Ancho deseado de la imagen
-    height: 200, // Altura deseada de la imagen
+    width: 600, // Ancho deseado de la imagen
+    height: 600, // Altura deseada de la imagen
     resizeMode: 'contain', // Puedes ajustar el modo de redimensionamiento según tus necesidades
     borderRadius: 10, // Bordes redondeados u otros estilos según prefieras
   },

@@ -244,8 +244,8 @@ export default function UserScreen({ navigation }) {
         }}>
 
         <View style={styles.modalBackground}>
-          <View style={styles.modalView}>
-            <Text>Ingresa tus credenciales</Text>
+          <View style={styles.modalViewUser}>
+            <Text style={styles.modalTitle}>Ingresa tus credenciales</Text>
             <TextInput
               style={styles.input}
               placeholder="Contraseña"
@@ -339,10 +339,30 @@ const styles = StyleSheet.create({
     flex: 1,
     //justifyContent: 'center', // Centrar verticalmente
     alignItems: 'center', // Centrar horizontalmente
-    maxHeight: 330, // Ajusta este valor según tus necesidades
+    maxHeight: 300, // Ajusta este valor según tus necesidades
     //marginHorizontal:15,
     //marginVertical:70,
-    margin: 20,
+    margin: 30,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 20,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5
+  },
+  modalViewUser: {
+    flex: 1,
+    //justifyContent: 'center', // Centrar verticalmente
+    alignItems: 'center', // Centrar horizontalmente
+    maxHeight: 200, // Ajusta este valor según tus necesidades
+    //marginHorizontal:15,
+    //marginVertical:70,
+    margin: 30,
     backgroundColor: 'white',
     borderRadius: 20,
     padding: 20,

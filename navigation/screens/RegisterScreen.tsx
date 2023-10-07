@@ -46,6 +46,7 @@ export default function RegisterScreen({ navigation }) {
         await updateDoc(proyRef, {
           Contador: increment(-1)
         });
+        console.log("Delete completo");
       } catch (error) {
         console.error('Error al eliminar el proyecto:', error);
       }
