@@ -54,14 +54,14 @@ export default function UserScreen({ navigation }) {
 
   const handleDeleteProject = async (projectId) => {
     //const confirmDelete = window.confirm('¿Estás seguro de que deseas eliminar este proyecto?');
-
-    if (GlobalValues.getLogged()) {
-      alert("Ingresa tus credenciales de usuario antes de eliminar un proyecto")
-      return
-    } else if (GlobalValues.getPermisos()) {
-      alert("No tienes los permisos necesarios para eliminar un proyecto")
-      return
-    }
+    
+        if (GlobalValues.getLogged()) {
+          alert("Ingresa tus credenciales de usuario antes de eliminar un proyecto")
+          return
+        } else if (GlobalValues.getPermisos()) {
+          alert("No tienes los permisos necesarios para eliminar un proyecto")
+          return
+        }
 
     if (/*confirmDelete*/true) {
       try {
@@ -169,6 +169,7 @@ export default function UserScreen({ navigation }) {
         GlobalValues.setPermisos(doc.data());
         GlobalValues.setLogged();
       });
+
     }
     console.log(GlobalValues.getPermisos());
     setNom("");
