@@ -42,8 +42,8 @@ export default function MainContainer() {
 
                     return <Ionicons name={iconName} size={size} color={color} />
                 },
-                tabBarActiveTintColor: 'tomato',
-                tabBarInactiveTintColor: 'grey',
+                tabBarActiveTintColor: 'rgb(16, 22, 81)',
+                tabBarInactiveTintColor: 'rgb(155, 174, 184)',
             })}>
 
             <Tab.Screen name={objectScreenName} component={ObjectDetector} options={{ headerShown: false }} />
