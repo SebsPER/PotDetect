@@ -7,9 +7,11 @@ import { useNavigation } from '@react-navigation/native';
 import GlobalValues from '../../utils/GlobalValues.tsx';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../../firebaseConfig';
+import { Dimensions } from 'react-native';
 
 export default function LoginScreen({ navigation }) {
 
+  const {width, height} = Dimensions.get('window');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -47,7 +49,7 @@ export default function LoginScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Iniciar Sesión</Text>
+      <Text style={styles.title}></Text>
       {error && <Text style={styles.errorText}>{error}</Text>}
       <TextInput
         style={styles.input}
@@ -62,15 +64,29 @@ export default function LoginScreen({ navigation }) {
         secureTextEntry
         value={password}
       />
-      <TouchableOpacity style={styles.button} onPress={handleSignIn}>
-        <Text style={styles.buttonText}>Iniciar Sesión</Text>
-      </TouchableOpacity>
 
+        <Text style={styles.olvida}> ¿Olvidaste tu contraseña? </Text>
+      <TouchableOpacity
+        style={{
+          backgroundColor: 'rgb(16, 22, 81)', // Cambia el color de fondo a azul
+          width: width - width*0.1, // Cambia el ancho a 200 unidades
+          height: 55,
+          padding: 10, // Añade relleno (padding) alrededor del texto
+          borderRadius: 5, // Añade bordes redondeados
+          justifyContent: 'center',
+        }}
+        onPress={handleSignIn}
+      >
+
+        <Text style={styles.buttonText}>Ingresar</Text>
+      </TouchableOpacity>
       {/* Botón para mostrar la pantalla de registro */}
       <TouchableOpacity onPress={showRegisterScreen}>
+      <View style={{ flexDirection: 'row' }}>
+        <Text style={styles.registerText1}> ¿Aun no tienes una cuenta? </Text>
         <Text style={styles.registerText}>Registrarse</Text>
+      </View>
       </TouchableOpacity>
-
     </View>
   );
 }
@@ -107,14 +123,27 @@ const styles = StyleSheet.create({
     color: 'white',
     fontWeight: 'bold',
     fontSize: 16,
+    textAlign:'center'
+
   },
   errorText: {
     color: 'red',
     marginBottom: 10,
   },
-  registerText: {
-    marginTop: 10,
-    color: 'blue',
-    textDecorationLine: 'underline',
-  },
+
+  registerText1: {
+      marginTop: 10,
+      color: 'black',
+    },
+    registerText: {
+        marginTop: 10,
+        color: 'rgb(16, 22, 81)',
+        textDecorationLine: 'underline',
+      },
+
+      olvida: {
+              marginTop: -5,
+              marginBottom: 25,
+              color: 'rgb(16, 22, 81)',
+            },
 });
