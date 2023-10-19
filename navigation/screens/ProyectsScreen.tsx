@@ -94,12 +94,11 @@ export default function ProyectsScreen({ navigation }) {
   const renderProjectItem = ({ item }) => (
     <TouchableOpacity onPress={() => handleItemClick(item)}>
       <View style={styles.projectItem}>
-        <Image source={{ uri: item.photo }} style={styles.projectImage} />
+        <Image source={require('../../assets/project.jpeg')} style={styles.projectImage} />
         <View style={styles.projectInfo}>
           <Text style={styles.projectName}>{item.name}</Text>
-          <Text style={styles.projectDescription}>{item.description}</Text>
+          <Text style={styles.projectCounter}>{item.counter} Registros</Text>
         </View>
-        <Text style={styles.projectCounter}>{item.counter}</Text>
         <TouchableOpacity onPress={() => handleDeleteProject(item.id)}>
           <Ionicons name="trash-outline" size={24} color="red" />
         </TouchableOpacity>
@@ -109,13 +108,13 @@ export default function ProyectsScreen({ navigation }) {
 
   const handleCreateProject = () => {
     console.log(GlobalValues.getPermisos())
-    if (GlobalValues.getLogged()) {
-      alert("Ingresa tus credenciales de usuario antes de crear un proyecto")
-      return
-    } else if (GlobalValues.getPermisos()) {
-      alert("No tienes los permisos necesarios para crear un proyecto")
-      return
-    }
+    /* if (GlobalValues.getLogged()) {
+       alert("Ingresa tus credenciales de usuario antes de crear un proyecto")
+       return
+     } else if (GlobalValues.getPermisos()) {
+       alert("No tienes los permisos necesarios para crear un proyecto")
+       return
+     }*/
     navigation.navigate('RegistrosP')
     //Aqui se navega a una pestaña para crear un proyecto nuevo
   };
@@ -124,9 +123,7 @@ export default function ProyectsScreen({ navigation }) {
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Proyectos</Text>
-        <TouchableOpacity onPress={handleCreateProject} style={styles.createButton}>
-          <Text style={styles.createButtonText}>Crear Nuevo Proyecto +</Text>
-        </TouchableOpacity>
+
       </View>
       <Text>Proyecto seleccionado: {GlobalValues.getWorkProyecto(false)}</Text>
       <FlatList
@@ -135,6 +132,9 @@ export default function ProyectsScreen({ navigation }) {
         renderItem={renderProjectItem}
         keyExtractor={(item) => item.id}
       />
+      <TouchableOpacity onPress={handleCreateProject} style={styles.createButton}>
+        <Text style={styles.createButtonText}>Crear Nuevo Proyecto</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -145,7 +145,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     paddingHorizontal: 16,
     paddingTop: 30,
-
   },
   header: {
     flexDirection: 'row',
@@ -158,10 +157,13 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   createButton: {
-    backgroundColor: '#FF6C5E',
-    paddingVertical: 8,
+    backgroundColor: 'rgb(16, 22, 81)',
+    paddingVertical: 17,
     paddingHorizontal: 16,
-    borderRadius: 8,
+    borderRadius: 4,
+    marginBottom: 10,
+
+
   },
   createButtonDisabled: {
     backgroundColor: '#FF6C5E',
@@ -172,12 +174,14 @@ const styles = StyleSheet.create({
   createButtonText: {
     color: 'white',
     fontWeight: 'bold',
+
+    textAlign: 'center'
   },
   projectItem: {
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 16,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: 'white',
     borderRadius: 8,
     padding: 12,
     elevation: 2,
@@ -202,6 +206,5 @@ const styles = StyleSheet.create({
   },
   projectCounter: {
     fontSize: 16,
-    fontWeight: 'bold',
   },
 });
