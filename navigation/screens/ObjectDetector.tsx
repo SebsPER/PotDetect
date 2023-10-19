@@ -147,7 +147,6 @@ export default function ObjectDetector({ navigation }) {
       const response = await axios.post(apiUrl, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
-          // Add any other headers you need, such as authorization headers
         },
       });
 
@@ -276,7 +275,7 @@ export default function ObjectDetector({ navigation }) {
           </TouchableOpacity>
         </View>) : (
         <View style={styles.container}>
-          <View style={{ flex: 5, flexDirection: 'column', justifyContent: 'center', alignItems: 'center', backgroundColor: 'white' }}>
+          <View style={{ flex: 4.5, flexDirection: 'column', justifyContent: 'center', alignItems: 'center', backgroundColor: 'white' }}>
             <Image
               style={styles.image}
               source={{ uri: `data:image/png;base64,${baseImg}` }}
@@ -285,28 +284,29 @@ export default function ObjectDetector({ navigation }) {
             //loadingIndicatorSource={require("./assets/loading_det.gif")}
             />
           </View>
-          <View style={{ flex: 1, flexDirection: 'row' }}>
-            <View style={{ flex: 3, flexDirection: 'column' }}>
-              <TouchableOpacity style={{ width: '100%', height: 50, borderWidth: 1, alignSelf: 'flex-start', borderRadius: 10, justifyContent: 'center', alignItems: 'center', }}
+          <View style={{ flex: 1.5, flexDirection: 'column', justifyContent:"space-around"}}>
+            <View style={{ flex: 4, flexDirection: 'column', justifyContent: "space-around"}}>
+              <Text style={styles.damageTextTitle}>Reporte de detección</Text>
+              <Text style={styles.damageText}>Huecos: {responseData.Hueco}</Text>
+              <Text style={styles.damageText}>Huecos Graves: {responseData.HuecoGrave}</Text>
+              <Text style={styles.damageText}>Grietas: {responseData.Grieta}</Text>
+              <Text style={styles.damageText}>Tiempo de Inferencia: {responseData.elapsed}</Text>
+            </View>
+            <View style={{ flex: 2, flexDirection: 'row', justifyContent:"space-evenly"}}>
+              <TouchableOpacity style={{ width: '47%', height: 50, borderWidth: 1, alignSelf: 'flex-start', borderRadius: 4, justifyContent: 'center', alignItems: 'center', backgroundColor:"white", borderColor:"#101651"}}
                 onPress={() => {
                   setPhotoTaken(true)
                   setbaseImg('')
                 }}>
-                <Text>Return</Text>
+                <Text style={{color:"#101651"}}>Return</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={{ width: '100%', height: 50, borderWidth: 1, alignSelf: 'flex-start', borderRadius: 10, justifyContent: 'center', alignItems: 'center', }}
+              <TouchableOpacity style={{ width: '47%', height: 50, borderWidth: 1, alignSelf: 'flex-start', borderRadius: 4, justifyContent: 'center', alignItems: 'center', backgroundColor:"#101651", borderColor:"#101651" }}
                 onPress={() => {
                   save_detection()
                   setPhotoTaken(true)
                 }}>
-                <Text>Save</Text>
+                <Text style={{color:"white"}}>Save</Text>
               </TouchableOpacity>
-            </View>
-            <View style={{ flex: 3, flexDirection: 'column' }}>
-              <Text>Huecos: {responseData.Hueco}</Text>
-              <Text>Huecos Graves: {responseData.HuecoGrave}</Text>
-              <Text>Grietas: {responseData.Grieta}</Text>
-              <Text>Tiempo de Inferencia: {responseData.elapsed}</Text>
             </View>
           </View>
         </View>
@@ -360,5 +360,17 @@ const styles = StyleSheet.create({
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
+  },
+  damageText: {
+    fontSize: 14,
+    color: '#8F8F8F',
+    marginLeft:15,
+    fontFamily:"Arial"
+  },
+  damageTextTitle: {
+    fontSize: 18,
+    color: '#2A3C44',
+    marginLeft:15,
+    fontFamily:"Arial"
   },
 });
