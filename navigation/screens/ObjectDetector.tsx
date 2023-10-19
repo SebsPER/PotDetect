@@ -6,7 +6,7 @@ import FormData from 'form-data';
 import * as FileSystem from 'expo-file-system';
 import * as Location from 'expo-location';
 import { deleteDoc, doc, getDoc, setDoc, collection, addDoc, getDocs, updateDoc, increment, getCountFromServer } from 'firebase/firestore';
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { ref, uploadBytes, getDownloadURL, uploadBytesResumable } from "firebase/storage";
 import { db, storage } from '../../firebaseConfig';
 import uuid from 'react-native-uuid';
 import GlobalValues from '../../utils/GlobalValues.tsx';
@@ -113,7 +113,7 @@ export default function ObjectDetector({ navigation }) {
 
   const __takePicture = async () => {
     if (!cameraRef) return
-    if (/*GlobalValues.getLogged()*/false) {
+    if (GlobalValues.getLogged()) {
       alert("Ingresa tus credenciales de usuario antes de hacer una detección")
       return
     }
@@ -130,7 +130,7 @@ export default function ObjectDetector({ navigation }) {
       const imageUri = photo.uri;
 
       //const apiUrl = 'http://localhost:5000/media/upload'
-      const apiUrl = 'http://192.168.1.9:5000/media/upload'; // Replace with your API endpoint URL
+      const apiUrl = 'http://10.11.156.104:5000/media/upload'; 
 
       const name_ = photo.uri.split('/').pop();
 
@@ -178,12 +178,22 @@ export default function ObjectDetector({ navigation }) {
         )
         console.log(uri);
         const img = await fetch(uri);
+        console.log('a');
         const bytes_blb = await img.blob();
-        const fileName = uuid.v4()
+        console.log('b');
+        const fileName = uuid.v4();
+        console.log('c');
         const storageRef = ref(storage, `${fileName}.jpg`);
-        await uploadBytes(storageRef, bytes_blb);
+        console.log('d');
+        //await uploadBytes(storageRef, bytes_blb);
+        const uploadTask = await uploadBytesResumable(storageRef, bytes_blb);
+        console.log('e');
 
         const url = await getDownloadURL(storageRef);
+        console.log('f');
+
+        const empleado = GlobalValues.getEmpleadoName();
+        console.log(empleado);
 
         const docRef = await addDoc(collection(db, "Empresas", GlobalValues.getEmpresaUID(), 'Proyecto', GlobalValues.getProyectoUID(), 'Registro'), {
           latitude: location.latitude,
@@ -194,7 +204,8 @@ export default function ObjectDetector({ navigation }) {
           HuecosGraves: responseData.HuecoGrave,
           Grietas: responseData.Grieta,
           Url: url,
-          Path: fileName
+          Path: fileName,
+          Usuario: empleado
         });
         console.log("Document written with ID: ", docRef.id);
         const proyRef = doc(db, "Empresas", GlobalValues.getEmpresaUID(), 'Proyecto', GlobalValues.getProyectoUID());
@@ -202,6 +213,7 @@ export default function ObjectDetector({ navigation }) {
         await updateDoc(proyRef, {
           Contador: increment(1)
         });
+        alert("Guardado de imagen exitoso!");
       } catch (e) {
         console.error("Error adding document: ", e);
       }

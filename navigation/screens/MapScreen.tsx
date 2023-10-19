@@ -21,6 +21,7 @@ export default function MapScreen({ navigation }) {
   const [huecoGrave, setHuecoGrave] = useState(0);
   const [description, setDescription] = useState("");
   const [foto, setFoto] = useState("");
+  const [Usuario, setUserName] = useState("");
 
   var proy = GlobalValues.getWorkProyecto();
   var noChange = GlobalValues.getRefresh();
@@ -93,6 +94,7 @@ export default function MapScreen({ navigation }) {
         },
         description: data.description,
         foto: data.Url,
+        Usuario: data.Usuario
       });
     });
     return locations;
@@ -112,12 +114,13 @@ export default function MapScreen({ navigation }) {
     //console.log(region);
   };
 
-  const handleCreateUser = (Grietaa, Huecoo, HuecoGravee, descriptionn, fotoo) => {
+  const handleCreateUser = (Grietaa, Huecoo, HuecoGravee, descriptionn, fotoo, Usuario) => {
     setGrietas(Grietaa)
     setHueco(Huecoo)
     setHuecoGrave(HuecoGravee)
     setDescription(descriptionn)
     setFoto(fotoo)
+    setUserName(Usuario)
 
     console.log("Grieta", grieta)
     console.log("Huecos", hueco)
@@ -138,9 +141,10 @@ export default function MapScreen({ navigation }) {
         <View style={styles.modalBackground}>
           <View style={styles.modalView}>
             <Text style={styles.modalTitle}>Datos del daño</Text>
-            <Text style={styles.dato}>grieta: {grieta}</Text>
-            <Text style={styles.dato}>hueco: {hueco}</Text>
-            <Text style={styles.dato}>huecoGrave: {huecoGrave}</Text>
+            <Text style={styles.dato}>Grietas: {grieta}</Text>
+            <Text style={styles.dato}>Huecos: {hueco}</Text>
+            <Text style={styles.dato}>Huecos Graves: {huecoGrave}</Text>
+            <Text style={styles.dato}>Empleado: {Usuario}</Text>
             <Image
               source={{ uri: foto }}
               style={styles.modalImage}
@@ -191,7 +195,7 @@ export default function MapScreen({ navigation }) {
             coordinate={location.location}
             title={location.title}
             description={location.description}
-            onPress={() => handleCreateUser(location.Grieta, location.Hueco, location.HuecoGrave, location.description, location.foto)}
+            onPress={() => handleCreateUser(location.Grieta, location.Hueco, location.HuecoGrave, location.description, location.foto, location.Usuario)}
           >
           </Marker>
         ))}
@@ -208,8 +212,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   modalImage: {
-    width: 200, // Ancho deseado de la imagen
-    height: 200, // Altura deseada de la imagen
+    width: 600, // Ancho deseado de la imagen
+    height: 600, // Altura deseada de la imagen
     resizeMode: 'contain', // Puedes ajustar el modo de redimensionamiento según tus necesidades
     borderRadius: 10, // Bordes redondeados u otros estilos según prefieras
   },

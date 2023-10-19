@@ -46,6 +46,7 @@ export default function RegisterScreen({ navigation }) {
         await updateDoc(proyRef, {
           Contador: increment(-1)
         });
+        console.log("Delete completo");
       } catch (error) {
         console.error('Error al eliminar el proyecto:', error);
       }
@@ -67,7 +68,8 @@ export default function RegisterScreen({ navigation }) {
         Hueco: data.Huecos,
         Grieta: data.Grietas,
         photo: data.Url,
-        Path: data.Path
+        Path: data.Path,
+        Empleado: data.Usuario
       });
     });
     console.log("detection", detections)
@@ -107,6 +109,7 @@ export default function RegisterScreen({ navigation }) {
             <Text>Hueco Grave: {item.HuecoGrave}</Text>
             <Text>Hueco: {item.Hueco}</Text>
             <Text>Grieta: {item.Grieta}</Text>
+            <Text>Empleado: {item.Empleado}</Text>
           </View>
           <Text style={styles.projectCounter}></Text>
           <TouchableOpacity onPress={() => handleDeleteRegister(item.id, item.Path)}>
