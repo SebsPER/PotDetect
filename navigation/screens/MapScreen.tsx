@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image, Modal, TextInput, Pressable } from 'react-native';
-import MapView, { Marker } from 'react-native-maps';
+import { View, Text, StyleSheet, TouchableOpacity, Image, Modal, TextInput, Pressable, FlatList } from 'react-native';
+import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../../firebaseConfig';
 import RNPickerSelect from 'react-native-picker-select';
 import GlobalValues from '../../utils/GlobalValues.tsx';
 import { useFocusEffect } from '@react-navigation/native';
+import { Ionicons } from '@expo/vector-icons';
 
 export default function MapScreen({ navigation }) {
   const [projects, setProjects] = useState([]);
@@ -22,6 +23,8 @@ export default function MapScreen({ navigation }) {
   const [description, setDescription] = useState("");
   const [foto, setFoto] = useState("");
   const [Usuario, setUserName] = useState("");
+
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
   var proy = GlobalValues.getWorkProyecto();
   var noChange = GlobalValues.getRefresh();
@@ -129,6 +132,25 @@ export default function MapScreen({ navigation }) {
     setModalAgre(true);
   };
 
+  const modalOnClose = () => {
+    setIsModalVisible(false);
+  };
+
+  const handleItemClick = (item) => {
+    console.log(item.id)
+    GlobalValues.setProyectoUID(item.id)
+    GlobalValues.setWorkProyecto(item);
+    onProyectoSelect(item);
+  };
+
+  const renderProyList = ({ item }) => (
+    <TouchableOpacity onPress={() => handleItemClick(item)}>
+      <View style={styles.list}>
+        <Text style={{color: '#101651' }}>{item.name}</Text>
+      </View>
+    </TouchableOpacity>
+  );
+
   return (
     <View style={styles.container}>
       <Modal
@@ -158,25 +180,28 @@ export default function MapScreen({ navigation }) {
           </View>
         </View>
       </Modal>
-      <View style={styles.dropdownContainer}>
-        <TouchableOpacity onPress={toggleMenu} style={styles.menuButton}>
-          <Text>☰ {GlobalValues.getWorkProyecto(false)}</Text>
-        </TouchableOpacity>
 
-        {/* Menú desplegable */}
-        {isOpen && (
-          <View style={styles.menu}>
-            {projects.map((projects) => (
-              <TouchableOpacity
-                key={projects.id}
-                onPress={() => onProyectoSelect(projects)}
-              >
-                <Text>{projects.name}</Text>
-
-              </TouchableOpacity>
-            ))}
+      <Modal animationType="slide" transparent={true} visible={isModalVisible}>
+        <View style={styles.modalContent}>
+          <View style={styles.titleContainer}>
+            <Text style={styles.title}>Filtrar por Proyecto</Text>
+            <Pressable onPress={modalOnClose}>
+              <Ionicons name={"close"} size={22} color={"#101651"} />
+            </Pressable>
           </View>
-        )}
+          <FlatList
+            style={{ marginTop: 10, marginHorizontal: 10 }}
+            data={projects}
+            renderItem={renderProyList}
+            keyExtractor={(item) => item.id}
+          />
+        </View>
+      </Modal>
+
+      <View style={styles.filterContainer}>
+        <TouchableOpacity onPress={() =>{setIsModalVisible(true)}} style={styles.filterButton}>
+          <Text style={{fontSize:14, color:"white", fontFamily:"Arial"}}>Filtrar <Ionicons name="md-filter" size={18} color="white" /></Text>
+        </TouchableOpacity>
       </View>
 
       <MapView
@@ -188,14 +213,15 @@ export default function MapScreen({ navigation }) {
           longitude: -76.90717739984393,
           longitudeDelta: 0.9701124206185341,
         }}
+        provider={PROVIDER_GOOGLE}
+        customMapStyle={true ? mapStyle : null}
       >
         {locations.map((location, index) => (
           <Marker
             key={index}
             coordinate={location.location}
-            title={location.title}
-            description={location.description}
             onPress={() => handleCreateUser(location.Grieta, location.Hueco, location.HuecoGrave, location.description, location.foto, location.Usuario)}
+            image={require('../../assets/fluent_location-16-filled.png')}
           >
           </Marker>
         ))}
@@ -216,9 +242,6 @@ const styles = StyleSheet.create({
     height: 600, // Altura deseada de la imagen
     resizeMode: 'contain', // Puedes ajustar el modo de redimensionamiento según tus necesidades
     borderRadius: 10, // Bordes redondeados u otros estilos según prefieras
-  },
-  modalContent: {
-    flex: 1,
   },
   modalView: {
     flex: 1,
@@ -272,7 +295,6 @@ const styles = StyleSheet.create({
     //justifyContent: 'center',
     //alignItems: 'center',
   },
-
   map: {
     width: '100%',
     height: '100%',
@@ -286,7 +308,7 @@ const styles = StyleSheet.create({
 
   dropdownContainer: {
     position: 'absolute',
-    top: 50,
+    top: 80,
     left: 20,
     zIndex: 1,
     backgroundColor: 'white',
@@ -297,5 +319,280 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
   },
+  filterContainer: {
+    position: 'absolute',
+    backgroundColor: '#28D585',
+    top: "8%",
+    width: "22%",
+    height: "5%",
+    borderRadius: 100,
+    elevation: 2,
+    zIndex: 1,
+  },
+  filterButton: {
+    flex: 1,
+    flexDirection:"row",
+    justifyContent: "space-around",
+    alignItems: "center"
+  },
+  modalContent: {
+    height: '35%',
+    width: '100%',
+    backgroundColor: '#FFFFFF',
+    borderTopRightRadius: 18,
+    borderTopLeftRadius: 18,
+    position: 'absolute',
+    bottom: 0,
+  },
+  titleContainer: {
+    height: '16%',
+    backgroundColor: '#F5F5F5',
+    borderTopRightRadius: 10,
+    borderTopLeftRadius: 10,
+    paddingHorizontal: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  title: {
+    color: '#101651',
+    fontFamily:"Arial",
+    fontSize: 16,
+  },
+  pickerContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 50,
+    paddingVertical: 20,
+  },
+  list: {
+    flexDirection: 'row',
+    padding: 15,
+    width: "100%",
+    justifyContent: 'center',
+  },
 });
 
+const mapStyle = [
+  {
+    elementType: "geometry",
+    stylers: [
+      {
+        color: "#F5F5F1",
+      },
+    ],
+  },
+  {
+    elementType: "geometry.fill",
+    stylers: [
+      {
+        saturation: -5,
+      },
+      {
+        lightness: -5,
+      },
+    ],
+  },
+  {
+    elementType: "labels.icon",
+    stylers: [
+      {
+        visibility: "off",
+      },
+    ],
+  },
+  // {
+  //   elementType: "labels.text.fill",
+  //   stylers: [
+  //     {
+  //       color: "#757575",
+  //     },
+  //   ],
+  // },
+  // {
+  //   elementType: "labels.text.stroke",
+  //   stylers: [
+  //     {
+  //       color: "#212121",
+  //     },
+  //   ],
+  // },
+  {
+    featureType: "administrative",
+    elementType: "geometry",
+    stylers: [
+      {
+        color: "#757575",
+      },
+    ],
+  },
+  // {
+  //   featureType: "administrative.country",
+  //   elementType: "labels.text.fill",
+  //   stylers: [
+  //     {
+  //       color: "#9E9E9E",
+  //     },
+  //   ],
+  // },
+  {
+    featureType: "administrative.land_parcel",
+    stylers: [
+      {
+        visibility: "on",
+      },
+    ],
+  },
+  // {
+  //   featureType: "administrative.locality",
+  //   elementType: "labels.text.fill",
+  //   stylers: [
+  //     {
+  //       color: "#BDBDBD",
+  //     },
+  //   ],
+  // },
+  // {
+  //   featureType: "poi",
+  //   elementType: "labels.text.fill",
+  //   stylers: [
+  //     {
+  //       color: "#757575",
+  //     },
+  //   ],
+  // },
+  {
+    featureType: "poi.business",
+    stylers: [
+      {
+        visibility: "off",
+      },
+    ],
+  },
+  {
+    featureType: "poi.park",
+    elementType: "geometry",
+    stylers: [
+      {
+        color: "#CFEFD6",
+      },
+    ],
+  },
+  {
+    featureType: "poi.park",
+    elementType: "labels.text",
+    stylers: [
+      {
+        visibility: "on",
+      },
+    ],
+  },
+  // {
+  //   featureType: "poi.park",
+  //   elementType: "labels.text.fill",
+  //   stylers: [
+  //     {
+  //       color: "#616161",
+  //     },
+  //   ],
+  // },
+  // {
+  //   featureType: "poi.park",
+  //   elementType: "labels.text.stroke",
+  //   stylers: [
+  //     {
+  //       color: "#1B1B1B",
+  //     },
+  //   ],
+  // },
+  {
+    featureType: "road",
+    stylers: [
+      {
+        visibility: "on",
+      },
+    ],
+  },
+  {
+    featureType: "road",
+    elementType: "geometry.fill",
+    stylers: [
+      {
+        color: "#FFFFFF",
+      },
+    ],
+  },
+  // {
+  //   featureType: "road",
+  //   elementType: "labels.text.fill",
+  //   stylers: [
+  //     {
+  //       color: "#8A8A8A",
+  //     },
+  //   ],
+  // },
+  {
+    featureType: "road.arterial",
+    elementType: "geometry",
+    stylers: [
+      {
+        color: "#FFFFFF",
+      },
+    ],
+  },
+  {
+    featureType: "road.highway",
+    elementType: "geometry",
+    stylers: [
+      {
+        color: "#FFFFFF",
+      },
+    ],
+  },
+  {
+    featureType: "road.highway.controlled_access",
+    elementType: "geometry",
+    stylers: [
+      {
+        color: "#FFFFFF",
+      },
+    ],
+  },
+  // {
+  //   featureType: "road.local",
+  //   elementType: "labels.text.fill",
+  //   stylers: [
+  //     {
+  //       color: "#616161",
+  //     },
+  //   ],
+  // },
+  // {
+  //   featureType: "transit",
+  //   elementType: "labels.text.fill",
+  //   stylers: [
+  //     {
+  //       color: "#757575",
+  //     },
+  //   ],
+  // },
+  {
+    featureType: "water",
+    elementType: "geometry",
+    stylers: [
+      {
+        color: "#B1E1F7",
+      },
+    ],
+  },
+  {
+    featureType: "water",
+    elementType: "labels.text.fill",
+    stylers: [
+      {
+        color: "#3D3D3D",
+      },
+    ],
+  },
+];
