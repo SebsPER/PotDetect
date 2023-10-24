@@ -42,7 +42,7 @@ export default function MainContainer() {
 
                     return <Ionicons name={iconName} size={size} color={color} />
                 },
-                tabBarActiveTintColor: 'rgb(16, 22, 81)',
+                tabBarActiveTintColor: 'rgb(40, 213, 133)',
                 tabBarInactiveTintColor: 'rgb(155, 174, 184)',
             })}>
 

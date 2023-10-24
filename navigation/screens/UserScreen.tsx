@@ -1,11 +1,12 @@
 import * as React from 'react';
-import { View, Text, Button, FlatList, StyleSheet, TouchableOpacity, Modal, Pressable, TextInput, KeyboardAvoidingView, ScrollView } from 'react-native';
+import { View, Icon, Text, Button, FlatList, StyleSheet, TouchableOpacity, Modal, Pressable, TextInput, KeyboardAvoidingView, ScrollView } from 'react-native';
 import { getAuth, signOut } from 'firebase/auth'; // Importa las funciones necesarias de Firebase Authentication
 import { auth } from '../../firebaseConfig';
 import { db } from '../../firebaseConfig';
 import { collection, addDoc, getDocs, query, where, doc, deleteDoc } from 'firebase/firestore';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import GlobalValues from '../../utils/GlobalValues.tsx';
+
 
 export default function UserScreen({ navigation }) {
   //const auth = getAuth(); // Obtiene la instancia de autenticación de Firebase
@@ -271,8 +272,9 @@ export default function UserScreen({ navigation }) {
       </Modal>
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Empleados</Text>
-        <TouchableOpacity onPress={handleCreateUser} style={styles.createButton}>
-          <Text style={styles.createButtonText}>Agregar Empleado +</Text>
+        <TouchableOpacity onPress={handleSignOut} style={styles.cerrarbtn}>
+          <Text style={styles.cerrar}>Cerrar Sesion</Text>
+
         </TouchableOpacity>
       </View>
       {
@@ -287,7 +289,9 @@ export default function UserScreen({ navigation }) {
         renderItem={renderUserItem}
         keyExtractor={(item) => item.id}
       />
-      <Button title="Cerrar Sesión" onPress={handleSignOut} />
+      <TouchableOpacity onPress={handleCreateUser} style={styles.createButton}>
+              <Text style={styles.createButtonText}>Agregar Empleado</Text>
+            </TouchableOpacity>
     </View>
   );
 }
@@ -299,6 +303,31 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 10,
   },
+  createButton: {
+      backgroundColor: 'rgb(40, 213, 133)',
+      paddingVertical: 17,
+      paddingHorizontal: 16,
+      borderRadius: 4,
+      marginBottom: 10,
+    },
+
+    cerrarbtn:{
+    backgroundColor: 'rgb(237, 127, 120)',
+      paddingVertical: 10,
+      paddingHorizontal: 10,
+      borderRadius: 4,
+      marginBottom: 5,
+    },
+
+    cerrar:{
+    backgroundColor: 'rgb(237, 127, 120)',
+    },
+  createButtonText: {
+      color: 'white',
+      fontWeight: 'bold',
+
+      textAlign: 'center'
+    },
   projectCounter: {
     fontSize: 16,
     fontWeight: 'bold',
@@ -416,16 +445,6 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: 24,
-    fontWeight: 'bold',
-  },
-  createButton: {
-    backgroundColor: '#FF6C5E',
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    borderRadius: 8,
-  },
-  createButtonText: {
-    color: 'white',
     fontWeight: 'bold',
   },
   list: {

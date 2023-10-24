@@ -157,13 +157,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   createButton: {
-    backgroundColor: 'rgb(16, 22, 81)',
+    backgroundColor: 'rgb(40, 213, 133)',
     paddingVertical: 17,
     paddingHorizontal: 16,
     borderRadius: 4,
     marginBottom: 10,
-
-
   },
   createButtonDisabled: {
     backgroundColor: '#FF6C5E',

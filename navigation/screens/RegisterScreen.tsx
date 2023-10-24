@@ -81,9 +81,6 @@ export default function RegisterScreen({ navigation }) {
     downloadFromUrl(item.photo)
   };
 
-  const handleCreateProject = () => {
-    navigation.navigate('Registros')
-  };
 
   const downloadFromUrl = async (url) => {
     const filename = `${GlobalValues.getWorkProyecto(false)}_${uuid.v4()}.jpg`;
@@ -99,6 +96,18 @@ export default function RegisterScreen({ navigation }) {
   const save = (uri) => {
     Sharing.shareAsync(uri);
   }
+   const handleCreateProject = () => {
+      //console.log(GlobalValues.getPermisos())
+      /* if (GlobalValues.getLogged()) {
+         alert("Ingresa tus credenciales de usuario antes de crear un proyecto")
+         return
+       } else if (GlobalValues.getPermisos()) {
+         alert("No tienes los permisos necesarios para crear un proyecto")
+         return
+       }*/
+      navigation.navigate('Camara')
+      //Aqui se navega a una pestaña para crear un proyecto nuevo
+    };
 
   const renderDetectionItem = ({ item }) => (
     <TouchableOpacity onPress={() => handleItemClick(item)}>
@@ -127,6 +136,9 @@ export default function RegisterScreen({ navigation }) {
         renderItem={renderDetectionItem}
         keyExtractor={(item) => item.id}
       />
+       <TouchableOpacity onPress={handleCreateProject} style={styles.createButton}>
+              <Text style={styles.createButtonText}>Crear Nuevo Registro</Text>
+            </TouchableOpacity>
     </View>
   );
 };
@@ -137,6 +149,19 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
+   createButtonText: {
+      color: 'white',
+      fontWeight: 'bold',
+
+      textAlign: 'center'
+    },
+     createButton: {
+        backgroundColor: 'rgb(40, 213, 133)',
+        paddingVertical: 17,
+        paddingHorizontal: 16,
+        borderRadius: 4,
+        marginBottom: 10,
+      },
   container: {
     flex: 1,
     backgroundColor: '#fff',
