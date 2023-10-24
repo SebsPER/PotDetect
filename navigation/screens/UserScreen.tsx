@@ -55,14 +55,14 @@ export default function UserScreen({ navigation }) {
 
   const handleDeleteProject = async (projectId) => {
     //const confirmDelete = window.confirm('¿Estás seguro de que deseas eliminar este proyecto?');
-    
-        if (GlobalValues.getLogged()) {
-          alert("Ingresa tus credenciales de usuario antes de eliminar un proyecto")
-          return
-        } else if (GlobalValues.getPermisos()) {
-          alert("No tienes los permisos necesarios para eliminar un proyecto")
-          return
-        }
+
+    if (GlobalValues.getLogged()) {
+      alert("Ingresa tus credenciales de usuario antes de eliminar un proyecto")
+      return
+    } else if (GlobalValues.getPermisos()) {
+      alert("No tienes los permisos necesarios para eliminar un proyecto")
+      return
+    }
 
     if (/*confirmDelete*/true) {
       try {
@@ -290,8 +290,8 @@ export default function UserScreen({ navigation }) {
         keyExtractor={(item) => item.id}
       />
       <TouchableOpacity onPress={handleCreateUser} style={styles.createButton}>
-              <Text style={styles.createButtonText}>Agregar Empleado</Text>
-            </TouchableOpacity>
+        <Text style={styles.createButtonText}>Agregar Empleado</Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -304,30 +304,30 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   createButton: {
-      backgroundColor: 'rgb(40, 213, 133)',
-      paddingVertical: 17,
-      paddingHorizontal: 16,
-      borderRadius: 4,
-      marginBottom: 10,
-    },
+    backgroundColor: 'rgb(40, 213, 133)',
+    paddingVertical: 17,
+    paddingHorizontal: 16,
+    borderRadius: 4,
+    marginBottom: 10,
+  },
 
-    cerrarbtn:{
+  cerrarbtn: {
     backgroundColor: 'rgb(237, 127, 120)',
-      paddingVertical: 10,
-      paddingHorizontal: 10,
-      borderRadius: 4,
-      marginBottom: 5,
-    },
+    paddingVertical: 10,
+    paddingHorizontal: 10,
+    borderRadius: 4,
+    marginBottom: 5,
+  },
 
-    cerrar:{
+  cerrar: {
     backgroundColor: 'rgb(237, 127, 120)',
-    },
+  },
   createButtonText: {
-      color: 'white',
-      fontWeight: 'bold',
+    color: 'white',
+    fontWeight: 'bold',
 
-      textAlign: 'center'
-    },
+    textAlign: 'center'
+  },
   projectCounter: {
     fontSize: 16,
     fontWeight: 'bold',

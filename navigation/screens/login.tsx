@@ -49,60 +49,60 @@ export default function LoginScreen({ navigation }) {
 
   return (
     <View style={styles.general}>
-    <View style={styles.imageContainer}>
-            <Image
-              source={require('../../assets/login.jpeg')} // Reemplaza 'tu_imagen.png' con la ruta de tu imagen.
-              style={styles.image}
-            />
+      <View style={styles.imageContainer}>
+        <Image
+          source={require('../../assets/login.jpeg')} // Reemplaza 'tu_imagen.png' con la ruta de tu imagen.
+          style={styles.image}
+        />
+      </View>
+
+      <View style={styles.titleDateO}>
+        <Text style={styles.titleDateo}>TeDateo</Text>
+
+      </View>
+
+      <View style={styles.container}>
+        <Text style={styles.title}></Text>
+        {error && <Text style={styles.errorText}>{error}</Text>}
+        <TextInput
+          style={styles.input}
+          placeholder="Correo electrónico"
+          onChangeText={(text) => setEmail(text)}
+          value={email}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Contraseña"
+          onChangeText={(text) => setPassword(text)}
+          secureTextEntry
+          value={password}
+        />
+
+        <Text style={styles.olvida}> ¿Olvidaste tu contraseña? </Text>
+        <TouchableOpacity
+          style={{
+            backgroundColor: 'rgb(40, 213, 133)', // Cambia el color de fondo a azul
+            width: width - width * 0.1, // Cambia el ancho a 200 unidades
+            height: 55,
+            padding: 10, // Añade relleno (padding) alrededor del texto
+            borderRadius: 5, // Añade bordes redondeados
+            justifyContent: 'center',
+          }}
+          onPress={handleSignIn}
+        >
+
+          <Text style={styles.buttonText}>Ingresar</Text>
+        </TouchableOpacity>
+        {/* Botón para mostrar la pantalla de registro */}
+        <TouchableOpacity onPress={showRegisterScreen}>
+          <View style={{ flexDirection: 'row' }}>
+            <Text style={styles.registerText1}> ¿Aun no tienes una cuenta? </Text>
+            <Text style={styles.registerText}>Registrarse</Text>
           </View>
 
-    <View style={styles.titleDateO}>
-          <Text style={styles.titleDateo}>TeDateo</Text>
+        </TouchableOpacity>
 
-    </View>
-
-    <View style={styles.container}>
-      <Text style={styles.title}></Text>
-      {error && <Text style={styles.errorText}>{error}</Text>}
-      <TextInput
-        style={styles.input}
-        placeholder="Correo electrónico"
-        onChangeText={(text) => setEmail(text)}
-        value={email}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Contraseña"
-        onChangeText={(text) => setPassword(text)}
-        secureTextEntry
-        value={password}
-      />
-
-      <Text style={styles.olvida}> ¿Olvidaste tu contraseña? </Text>
-      <TouchableOpacity
-        style={{
-          backgroundColor: 'rgb(40, 213, 133)', // Cambia el color de fondo a azul
-          width: width - width * 0.1, // Cambia el ancho a 200 unidades
-          height: 55,
-          padding: 10, // Añade relleno (padding) alrededor del texto
-          borderRadius: 5, // Añade bordes redondeados
-          justifyContent: 'center',
-        }}
-        onPress={handleSignIn}
-      >
-
-        <Text style={styles.buttonText}>Ingresar</Text>
-      </TouchableOpacity>
-      {/* Botón para mostrar la pantalla de registro */}
-      <TouchableOpacity onPress={showRegisterScreen}>
-        <View style={{ flexDirection: 'row' }}>
-          <Text style={styles.registerText1}> ¿Aun no tienes una cuenta? </Text>
-          <Text style={styles.registerText}>Registrarse</Text>
-        </View>
-
-      </TouchableOpacity>
-
-    </View>
+      </View>
     </View>
   );
 }
@@ -164,29 +164,29 @@ const styles = StyleSheet.create({
     color: 'black',
   },
 
-   imageContainer: {
-      //flex: 2, // Esto ocupará el 25% de la pantalla verticalmente.
-      alignItems: 'center',
-     justifyContent: 'flex-start',
-     backgroundColor: 'red',
-     height:'35%'
-    },
-    image: {
-      // width: '80%', // Puedes ajustar el tamaño de la imagen según tus preferencias.
-      height: '100%', // Puedes ajustar el tamaño de la imagen según tus preferencias.
-      resizeMode: 'stretch', // Ajusta la forma en que se ajusta la imagen.
-    },
-    titleDateo:{
+  imageContainer: {
+    //flex: 2, // Esto ocupará el 25% de la pantalla verticalmente.
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    backgroundColor: 'red',
+    height: '35%'
+  },
+  image: {
+    // width: '80%', // Puedes ajustar el tamaño de la imagen según tus preferencias.
+    height: '100%', // Puedes ajustar el tamaño de la imagen según tus preferencias.
+    resizeMode: 'stretch', // Ajusta la forma en que se ajusta la imagen.
+  },
+  titleDateo: {
     color: 'black',
-       fontWeight: 'bold',
-       fontSize: 39,
-       textAlign: 'left', // Alinea el texto a la izquierda.
+    fontWeight: 'bold',
+    fontSize: 39,
+    textAlign: 'left', // Alinea el texto a la izquierda.
 
-    },
-    titleDateO:{
-paddingTop: 20,
-paddingLeft: 20,
+  },
+  titleDateO: {
+    paddingTop: 20,
+    paddingLeft: 20,
     alignItems: 'left',
-    }
+  }
 
 });

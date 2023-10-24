@@ -134,7 +134,7 @@ export default function ObjectDetector({ navigation }) {
       const imageUri = photo.uri;
 
       //const apiUrl = 'http://localhost:5000/media/upload'
-      const apiUrl = 'http://172.16.221.151:5000/media/upload'; 
+      const apiUrl = 'http://172.16.221.151:5000/media/upload';
 
       const name_ = photo.uri.split('/').pop();
 
@@ -242,7 +242,7 @@ export default function ObjectDetector({ navigation }) {
   const renderProyList = ({ item }) => (
     <TouchableOpacity onPress={() => handleItemClick(item)}>
       <View style={styles.list}>
-        <Text style={{color: '#101651' }}>{item.name}</Text>
+        <Text style={{ color: '#101651' }}>{item.name}</Text>
       </View>
     </TouchableOpacity>
   );
@@ -293,27 +293,27 @@ export default function ObjectDetector({ navigation }) {
             //loadingIndicatorSource={require("./assets/loading_det.gif")}
             />
           </View>
-          <View style={{ flex: 1.5, flexDirection: 'column', justifyContent:"space-around"}}>
-            <View style={{ flex: 4, flexDirection: 'column', justifyContent: "space-around"}}>
+          <View style={{ flex: 1.5, flexDirection: 'column', justifyContent: "space-around" }}>
+            <View style={{ flex: 4, flexDirection: 'column', justifyContent: "space-around" }}>
               <Text style={styles.damageTextTitle}>Reporte de detección</Text>
               <Text style={styles.damageText}>Huecos: {responseData.Hueco}</Text>
               <Text style={styles.damageText}>Huecos Graves: {responseData.HuecoGrave}</Text>
               <Text style={styles.damageText}>Grietas: {responseData.Grieta}</Text>
               <Text style={styles.damageText}>Tiempo de Inferencia: {responseData.elapsed}</Text>
             </View>
-            <View style={{ flex: 2, flexDirection: 'row', justifyContent:"space-evenly"}}>
-              <TouchableOpacity style={{ width: '47%', height: 50, borderWidth: 1, alignSelf: 'flex-start', borderRadius: 4, justifyContent: 'center', alignItems: 'center', backgroundColor:"white", borderColor:"#101651"}}
+            <View style={{ flex: 2, flexDirection: 'row', justifyContent: "space-evenly" }}>
+              <TouchableOpacity style={{ width: '47%', height: 50, borderWidth: 1, alignSelf: 'flex-start', borderRadius: 4, justifyContent: 'center', alignItems: 'center', backgroundColor: "white", borderColor: "#101651" }}
                 onPress={() => {
                   setPhotoTaken(true)
                   setbaseImg('')
                 }}>
-                <Text style={{color:"#101651"}}>Return</Text>
+                <Text style={{ color: "#101651" }}>Return</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={{ width: '47%', height: 50, borderWidth: 1, alignSelf: 'flex-start', borderRadius: 4, justifyContent: 'center', alignItems: 'center', backgroundColor:"#101651", borderColor:"#101651" }}
+              <TouchableOpacity style={{ width: '47%', height: 50, borderWidth: 1, alignSelf: 'flex-start', borderRadius: 4, justifyContent: 'center', alignItems: 'center', backgroundColor: "#101651", borderColor: "#101651" }}
                 onPress={() => {
                   setIsModalVisible(true)
                 }}>
-                <Text style={{color:"white"}}>Save</Text>
+                <Text style={{ color: "white" }}>Save</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -372,14 +372,14 @@ const styles = StyleSheet.create({
   damageText: {
     fontSize: 14,
     color: '#8F8F8F',
-    marginLeft:15,
-    fontFamily:"Arial"
+    marginLeft: 15,
+    fontFamily: "Arial"
   },
   damageTextTitle: {
     fontSize: 18,
     color: '#2A3C44',
-    marginLeft:15,
-    fontFamily:"Arial"
+    marginLeft: 15,
+    fontFamily: "Arial"
   },
   modalContent: {
     height: '35%',
@@ -402,7 +402,7 @@ const styles = StyleSheet.create({
   },
   title: {
     color: '#101651',
-    fontFamily:"Arial",
+    fontFamily: "Arial",
     fontSize: 16,
   },
   pickerContainer: {
