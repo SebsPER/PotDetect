@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef, useCallback } from 'react';
 import axios from 'axios';
-import { Button, StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native';
+import { Button, StyleSheet, Text, TouchableOpacity, View, Image, Modal, Pressable, FlatList } from 'react-native';
 import { Camera, CameraType } from 'expo-camera';
 import FormData from 'form-data';
 import * as FileSystem from 'expo-file-system';
@@ -11,6 +11,9 @@ import { db, storage } from '../../firebaseConfig';
 import uuid from 'react-native-uuid';
 import GlobalValues from '../../utils/GlobalValues.tsx';
 import { useFocusEffect } from '@react-navigation/native';
+
+import { Picker } from '@react-native-picker/picker';
+import Ionicons from '@expo/vector-icons/Ionicons';
 
 const blurhash =
   '|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[';
@@ -29,6 +32,8 @@ export default function ObjectDetector({ navigation }) {
 
   const [location, setLocation] = useState<Location.LocationObjectCoords>({ "accuracy": 32.18999583376263, "altitude": 157.40081787109375, "altitudeAccuracy": 16.810970306396484, "heading": -1, "latitude": -12.104007595961612, "longitude": -76.99086161121983, "speed": -1 });
   const [errorMsg, setErrorMsg] = useState(null);
+
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
   var proy = GlobalValues.getWorkProyecto();
   var noChange = GlobalValues.getRefresh();
@@ -77,7 +82,6 @@ export default function ObjectDetector({ navigation }) {
 
 
   const fetchListFromFirestore = async () => {
-    console.log("entro");
 
     const Proyecto = await getDocs(collection(db, 'Empresas', GlobalValues.getEmpresaUID(), 'Proyecto'));
 
@@ -130,7 +134,7 @@ export default function ObjectDetector({ navigation }) {
       const imageUri = photo.uri;
 
       //const apiUrl = 'http://localhost:5000/media/upload'
-      const apiUrl = 'http://10.11.156.104:5000/media/upload'; 
+      const apiUrl = 'http://172.16.221.151:5000/media/upload'; 
 
       const name_ = photo.uri.split('/').pop();
 
@@ -177,22 +181,22 @@ export default function ObjectDetector({ navigation }) {
         )
         console.log(uri);
         const img = await fetch(uri);
-        console.log('a');
+        //console.log('a');
         const bytes_blb = await img.blob();
-        console.log('b');
+        //console.log('b');
         const fileName = uuid.v4();
-        console.log('c');
+        //console.log('c');
         const storageRef = ref(storage, `${fileName}.jpg`);
-        console.log('d');
+        //console.log('d');
         //await uploadBytes(storageRef, bytes_blb);
         const uploadTask = await uploadBytesResumable(storageRef, bytes_blb);
-        console.log('e');
+        //console.log('e');
 
         const url = await getDownloadURL(storageRef);
-        console.log('f');
+        //console.log('f');
 
         const empleado = GlobalValues.getEmpleadoName();
-        console.log(empleado);
+        //console.log(empleado);
 
         const docRef = await addDoc(collection(db, "Empresas", GlobalValues.getEmpresaUID(), 'Proyecto', GlobalValues.getProyectoUID(), 'Registro'), {
           latitude: location.latitude,
@@ -222,40 +226,45 @@ export default function ObjectDetector({ navigation }) {
     }
   }
 
-  const onProyectoSelect = async (proyectoData) => {
-    console.log(proyectoData.id)
-    GlobalValues.setProyectoUID(proyectoData.id)
-    GlobalValues.setWorkProyecto(proyectoData);
-    // const a = GlobalValues.getProyectoUID()
-    // console.log("a", a)
-    setSelectedProyecto(proyectoData.id);
-    setIsOpen(false);
-    // Cierra el menú desplegable al seleccionar un proyecto
-    //const fetchedLocations = await fetchLocationsFromFirestore(proyectoUid);
-    //setLocations(fetchedLocations);
+  const modalOnClose = () => {
+    setIsModalVisible(false);
   };
+
+  const handleItemClick = (item) => {
+    console.log(item.id)
+    GlobalValues.setProyectoUID(item.id)
+    GlobalValues.setWorkProyecto(item);
+    save_detection();
+    setIsModalVisible(false);
+    setPhotoTaken(true);
+  };
+
+  const renderProyList = ({ item }) => (
+    <TouchableOpacity onPress={() => handleItemClick(item)}>
+      <View style={styles.list}>
+        <Text style={{color: '#101651' }}>{item.name}</Text>
+      </View>
+    </TouchableOpacity>
+  );
 
   return (
     <View style={styles.container}>
-      <View style={styles.dropdownContainer}>
-        <TouchableOpacity onPress={toggleMenu} style={styles.menuButton}>
-          <Text>☰ {Title}</Text>
-        </TouchableOpacity>
-
-        {/* Menú desplegable */}
-        {isOpen && (
-          <View style={styles.menu}>
-            {projects.map((projects) => (
-              <TouchableOpacity
-                key={projects.id}
-                onPress={() => onProyectoSelect(projects)}
-              >
-                <Text>{projects.name}</Text>
-              </TouchableOpacity>
-            ))}
+      <Modal animationType="slide" transparent={true} visible={isModalVisible}>
+        <View style={styles.modalContent}>
+          <View style={styles.titleContainer}>
+            <Text style={styles.title}>Elegir Proyecto</Text>
+            <Pressable onPress={modalOnClose}>
+              <Ionicons name={"close"} size={22} color={"#101651"} />
+            </Pressable>
           </View>
-        )}
-      </View>
+          <FlatList
+            style={{ marginTop: 10, marginHorizontal: 10 }}
+            data={projects}
+            renderItem={renderProyList}
+            keyExtractor={(item) => item.id}
+          />
+        </View>
+      </Modal>
 
 
       {photoTaken ? (
@@ -302,8 +311,7 @@ export default function ObjectDetector({ navigation }) {
               </TouchableOpacity>
               <TouchableOpacity style={{ width: '47%', height: 50, borderWidth: 1, alignSelf: 'flex-start', borderRadius: 4, justifyContent: 'center', alignItems: 'center', backgroundColor:"#101651", borderColor:"#101651" }}
                 onPress={() => {
-                  save_detection()
-                  setPhotoTaken(true)
+                  setIsModalVisible(true)
                 }}>
                 <Text style={{color:"white"}}>Save</Text>
               </TouchableOpacity>
@@ -372,5 +380,42 @@ const styles = StyleSheet.create({
     color: '#2A3C44',
     marginLeft:15,
     fontFamily:"Arial"
+  },
+  modalContent: {
+    height: '35%',
+    width: '100%',
+    backgroundColor: '#FFFFFF',
+    borderTopRightRadius: 18,
+    borderTopLeftRadius: 18,
+    position: 'absolute',
+    bottom: 0,
+  },
+  titleContainer: {
+    height: '16%',
+    backgroundColor: '#F5F5F5',
+    borderTopRightRadius: 10,
+    borderTopLeftRadius: 10,
+    paddingHorizontal: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  title: {
+    color: '#101651',
+    fontFamily:"Arial",
+    fontSize: 16,
+  },
+  pickerContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 50,
+    paddingVertical: 20,
+  },
+  list: {
+    flexDirection: 'row',
+    padding: 15,
+    width: "100%",
+    justifyContent: 'center',
   },
 });
