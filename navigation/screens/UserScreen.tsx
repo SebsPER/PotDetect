@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, Icon, Text, Button, FlatList, StyleSheet, TouchableOpacity, Modal, Pressable, TextInput, KeyboardAvoidingView, ScrollView } from 'react-native';
+import { View, Icon, Image, Text, Button, FlatList, StyleSheet, TouchableOpacity, Modal, Pressable, TextInput, KeyboardAvoidingView, ScrollView } from 'react-native';
 import { getAuth, signOut } from 'firebase/auth'; // Importa las funciones necesarias de Firebase Authentication
 import { auth } from '../../firebaseConfig';
 import { db } from '../../firebaseConfig';
@@ -107,21 +107,18 @@ export default function UserScreen({ navigation }) {
 
   const renderUserItem = ({ item }) => (
     <TouchableOpacity onPress={() => handleItemClick(item)}>
-      <View style={styles.list}>
-        <View style={styles.itemContainer}>
-          <Text style={styles.nameText}>{item.name}</Text>
-
-        </View>
-        <View style={styles.itemContainer}>
+      <View style={styles.projectItem}>
+        <Image source={require('../../assets/perfil.jpeg')} style={styles.projectImage} />
+        <View style={styles.projectInfo}>
+          <Text style={styles.projectName}>{item.name}</Text>
           <Text style={styles.projectCounter}>{getPrivilegeLabel(item.priv)}</Text>
-          <TouchableOpacity
-            style={styles.deleteButton}
-            onPress={() => handleDeleteProject(item.id)}
-          >
-            <Ionicons name="trash-outline" size={24} color="red" />
-          </TouchableOpacity>
         </View>
+        <TouchableOpacity onPress={() => handleDeleteProject(item.id)}>
+          <Ionicons name="trash-outline" size={24} color="red" />
+        </TouchableOpacity>
       </View>
+
+
     </TouchableOpacity>
   );
 
@@ -312,15 +309,16 @@ const styles = StyleSheet.create({
   },
 
   cerrarbtn: {
-    backgroundColor: 'rgb(237, 127, 120)',
+    backgroundColor: 'rgb(337, 27, 10)',
     paddingVertical: 10,
     paddingHorizontal: 10,
     borderRadius: 4,
     marginBottom: 5,
+    marginTop: 5
   },
 
   cerrar: {
-    backgroundColor: 'rgb(237, 127, 120)',
+    backgroundColor: 'rgb(337, 27, 10)',
   },
   createButtonText: {
     color: 'white',
@@ -455,5 +453,23 @@ const styles = StyleSheet.create({
     padding: 15,
     width: 350,
     justifyContent: 'space-between',
+  },
+  projectItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 16,
+    backgroundColor: 'white',
+    borderRadius: 8,
+    padding: 12,
+    elevation: 2,
+  },
+  projectImage: {
+    width: 80,
+    height: 80,
+    borderRadius: 8,
+  },
+  projectInfo: {
+    flex: 1,
+    marginLeft: 12,
   },
 });
