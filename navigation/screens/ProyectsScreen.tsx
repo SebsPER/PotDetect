@@ -125,7 +125,6 @@ export default function ProyectsScreen({ navigation }) {
         <Text style={styles.headerTitle}>Proyectos</Text>
 
       </View>
-      <Text>Proyecto seleccionado: {GlobalValues.getWorkProyecto(false)}</Text>
       <FlatList
         style={{ marginTop: 15 }}
         data={projects}

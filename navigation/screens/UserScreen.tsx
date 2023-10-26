@@ -278,10 +278,7 @@ export default function UserScreen({ navigation }) {
       </Modal>
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Empleados</Text>
-        <TouchableOpacity onPress={handleSignOut} style={styles.cerrarbtn}>
-          <Text style={styles.cerrar}>Cerrar Sesion</Text>
-
-        </TouchableOpacity>
+        
       </View>
       {
         logUser === "" ?
@@ -297,6 +294,10 @@ export default function UserScreen({ navigation }) {
       />
       <TouchableOpacity onPress={handleCreateUser} style={styles.createButton}>
         <Text style={styles.createButtonText}>Agregar Empleado</Text>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={handleSignOut} style={styles.cerrarbtn}>
+          <Text style={styles.cerrar}>Cerrar Sesion</Text>
+
       </TouchableOpacity>
     </View>
   );
@@ -318,21 +319,21 @@ const styles = StyleSheet.create({
   },
 
   cerrarbtn: {
-    backgroundColor: 'rgb(337, 27, 10)',
-    paddingVertical: 10,
-    paddingHorizontal: 10,
+    backgroundColor: 'rgb(237, 127, 120)',
+    paddingVertical: 17,
+    paddingHorizontal: 16,
     borderRadius: 4,
-    marginBottom: 5,
-    marginTop: 5
+    marginBottom: 10,
   },
 
   cerrar: {
-    backgroundColor: 'rgb(337, 27, 10)',
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center'
   },
   createButtonText: {
     color: 'white',
     fontWeight: 'bold',
-
     textAlign: 'center'
   },
   projectCounter: {
