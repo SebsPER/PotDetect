@@ -302,14 +302,14 @@ export default function ObjectDetector({ navigation }) {
               <Text style={styles.damageText}>Tiempo de Inferencia: {responseData.elapsed}</Text>
             </View>
             <View style={{ flex: 2, flexDirection: 'row', justifyContent: "space-evenly" }}>
-              <TouchableOpacity style={{ width: '47%', height: 50, borderWidth: 1, alignSelf: 'flex-start', borderRadius: 4, justifyContent: 'center', alignItems: 'center', backgroundColor: "white", borderColor: "#101651" }}
+              <TouchableOpacity style={{ width: '47%', height: 50, borderWidth: 1, alignSelf: 'flex-start', borderRadius: 4, justifyContent: 'center', alignItems: 'center', backgroundColor: "white", borderColor: "#28D585" }}
                 onPress={() => {
                   setPhotoTaken(true)
                   setbaseImg('')
                 }}>
-                <Text style={{ color: "#101651" }}>Return</Text>
+                <Text style={{ color: "#28D585" }}>Return</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={{ width: '47%', height: 50, borderWidth: 1, alignSelf: 'flex-start', borderRadius: 4, justifyContent: 'center', alignItems: 'center', backgroundColor: "#101651", borderColor: "#101651" }}
+              <TouchableOpacity style={{ width: '47%', height: 50, borderWidth: 1, alignSelf: 'flex-start', borderRadius: 4, justifyContent: 'center', alignItems: 'center', backgroundColor: "#28D585", borderColor: "#28D585" }}
                 onPress={() => {
                   setIsModalVisible(true)
                 }}>
@@ -379,7 +379,8 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: '#2A3C44',
     marginLeft: 15,
-    fontFamily: "Arial"
+    fontFamily: "Arial",
+    fontWeight: "bold"
   },
   modalContent: {
     height: '35%',

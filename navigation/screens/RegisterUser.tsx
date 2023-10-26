@@ -6,6 +6,7 @@ import { deleteDoc, doc, getDoc, setDoc, collection, addDoc } from 'firebase/fir
 import { db } from '../../firebaseConfig';
 import { useNavigation } from '@react-navigation/native';
 import GlobalValues from '../../utils/GlobalValues.tsx';
+import LoginScreen from './navigation/screens/login';
 
 export default function RegisterScreen({ navigation }) {
   const [ruc, setRuc] = useState('');
@@ -49,6 +50,10 @@ export default function RegisterScreen({ navigation }) {
     }
   };
 
+  const showLoginScreen = () => {
+    navigation.navigate('Login');
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Registrarse</Text>
@@ -85,9 +90,14 @@ export default function RegisterScreen({ navigation }) {
         secureTextEntry
         value={passwordU}
       />
-      <TouchableOpacity style={styles.button} onPress={handleRegister}>
-        <Text style={styles.buttonText}>Registrarse</Text>
-      </TouchableOpacity>
+      <View style={{ flexDirection: 'row', justifyContent: "space-evenly" }}>
+        <TouchableOpacity style={styles.buttonOutline} onPress={showLoginScreen}>
+          <Text style={styles.buttonTextOut}>Volver</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={handleRegister}>
+          <Text style={styles.buttonText}>Registrarse</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
@@ -114,15 +124,31 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   button: {
-    backgroundColor: 'blue',
-    paddingVertical: 12,
-    paddingHorizontal: 24,
+    backgroundColor: '#28D585',
     borderRadius: 5,
+    justifyContent: 'center', alignItems: 'center',
+    width: "47%",
+    height: 50
+  },
+  buttonOutline: {
+    borderColor: '#28D585',
+    borderRadius: 5,
+    borderWidth: 1,
+    justifyContent: 'center', alignItems: 'center',
+    width: "47%",
+    height: 50
   },
   buttonText: {
     color: 'white',
     fontWeight: 'bold',
-    fontSize: 16,
+    fontSize: 15,
+    textAlign: 'center',
+  },
+  buttonTextOut: {
+    color: '#28D585',
+    fontWeight: 'bold',
+    fontSize: 15,
+    textAlign: 'center',
   },
   errorText: {
     color: 'red',
