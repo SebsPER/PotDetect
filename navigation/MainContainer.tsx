@@ -14,8 +14,8 @@ import RegisterProyect from './screens/RegisterProyect';
 // Names
 const objectScreenName = 'Camara';
 const mapScreenName = 'Mapa';
-const userScreenName = 'Ajustes';
-const proyectScreenName = 'Proyect';
+const userScreenName = 'Empleados';
+const proyectScreenName = 'Proyectos';
 const registerScreen = 'Registros';
 const registerProyect = 'RegistrosP';
 
@@ -35,7 +35,7 @@ export default function MainContainer() {
                     } else if (rn === mapScreenName) {
                         iconName = focused ? 'map' : 'map-outline';
                     } else if (rn === userScreenName) {
-                        iconName = focused ? 'settings' : 'settings-outline';
+                        iconName = focused ? 'person' : 'person-outline';
                     } else if (rn === proyectScreenName) {
                         iconName = focused ? 'folder' : 'folder';
                     }
