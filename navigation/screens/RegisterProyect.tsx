@@ -37,7 +37,7 @@ export default function RegisterProyect({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Registrarse</Text>
+      <Text style={styles.title}>Crear Proyecto</Text>
       {error && <Text style={styles.errorText}>{error}</Text>}
 
       <TextInput
@@ -61,8 +61,8 @@ export default function RegisterProyect({ navigation }) {
         value={descripcion}
       />
 
-      <TouchableOpacity style={styles.button} onPress={handleRegister}>
-        <Text style={styles.buttonText}>Registrarse</Text>
+      <TouchableOpacity style={styles.createButton} onPress={handleRegister}>
+        <Text style={styles.createButtonText}>Crear</Text>
       </TouchableOpacity>
     </View>
   );
@@ -79,6 +79,19 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
+  },
+   createButton: {
+      backgroundColor: 'rgb(40, 213, 133)',
+      paddingVertical: 17,
+      paddingHorizontal: 16,
+      borderRadius: 4,
+      marginBottom: 10,
+      width:'100%'
+    },
+  createButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center'
   },
   input: {
     width: '100%',

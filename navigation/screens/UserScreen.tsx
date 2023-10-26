@@ -217,19 +217,23 @@ export default function UserScreen({ navigation }) {
               onChangeText={(text) => setNewPerm(text)}
               value={newPerm}
             />
-            <Pressable style={styles.button}
-              onPress={() => setModalAgre(!modalAgre)}
-            >
-              <Text style={styles.cancelButton}>Cancelar</Text>
-            </Pressable>
-            <Pressable style={styles.button}
-              onPress={() => {
-                addWorker()
-                setModalAgre(!modalAgre)
-              }}
-            >
-              <Text style={styles.addButton}>Agregar</Text>
-            </Pressable>
+
+
+             <View style={{ flexDirection: 'row', justifyContent: "space-evenly" }}>
+                                                  <TouchableOpacity style={{ width: '47%', height: 50, borderWidth: 1, marginRigth:0, alignSelf: 'flex-start', borderRadius: 4, justifyContent: 'center', alignItems: 'center', backgroundColor: "white", borderColor: 'rgb(40, 213, 133)' }}
+                                                    onPress={() => setModalAgre(!modalAgre)}>
+                                                    <Text style={{ color: 'rgb(40, 213, 133)' }}>Cerrar</Text>
+                                                  </TouchableOpacity>
+                                                  <TouchableOpacity style={{ width: '47%', height: 50, borderWidth: 1,marginLeft:10, alignSelf: 'flex-start', borderRadius: 4, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgb(40, 213, 133)', borderColor: 'rgb(40, 213, 133)' }}
+                                                    onPress={() => {
+                                                                    addWorker()
+                                                                    setModalAgre(!modalAgre)
+                                                                  }}
+                                                                >
+                                                    <Text style={{ color: "white" }}>Ingresar</Text>
+                                                  </TouchableOpacity>
+                                                </View>
+
           </View>
         </View>
       </Modal>
@@ -241,9 +245,11 @@ export default function UserScreen({ navigation }) {
           alert("Cerro el modal");
         }}>
 
+
         <View style={styles.modalBackground}>
           <View style={styles.modalViewUser}>
             <Text style={styles.modalTitle}>Ingresa tus credenciales</Text>
+
             <TextInput
               style={styles.input}
               placeholder="Contraseña"
@@ -251,19 +257,22 @@ export default function UserScreen({ navigation }) {
               onChangeText={(text) => setPwd(text)}
               value={pwd}
             />
-            <Pressable style={styles.button}
-              onPress={() => setModalLog(!modalLog)}
-            >
-              <Text style={styles.cancelButton}>Cancelar</Text>
-            </Pressable>
-            <Pressable style={styles.button}
-              onPress={() => {
-                checkCreds()
-                setModalLog(!modalLog)
-              }}
-            >
-              <Text style={styles.addButton}>Iniciar Sesión</Text>
-            </Pressable>
+
+             <View style={{ flexDirection: 'row', justifyContent: "space-evenly" }}>
+                                      <TouchableOpacity style={{ width: '47%', height: 50, borderWidth: 1, marginRigth:0, alignSelf: 'flex-start', borderRadius: 4, justifyContent: 'center', alignItems: 'center', backgroundColor: "white", borderColor: 'rgb(40, 213, 133)' }}
+                                        onPress={() => setModalLog(!modalLog)}>
+                                        <Text style={{ color: 'rgb(40, 213, 133)' }}>Cerrar</Text>
+                                      </TouchableOpacity>
+                                      <TouchableOpacity style={{ width: '47%', height: 50, borderWidth: 1,marginLeft:10, alignSelf: 'flex-start', borderRadius: 4, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgb(40, 213, 133)', borderColor: 'rgb(40, 213, 133)' }}
+                                        onPress={() => {
+                                                        checkCreds()
+                                                        setModalLog(!modalLog)
+                                                      }}
+                                                    >
+                                        <Text style={{ color: "white" }}>Ingresar</Text>
+                                      </TouchableOpacity>
+                                    </View>
+
           </View>
         </View>
       </Modal>
@@ -336,8 +345,9 @@ const styles = StyleSheet.create({
   },
 
   modalBackground: {
+  //margintop:20,
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Fondo semiopaco
+    backgroundColor: 'rgba(0, 0, 0, 0.7)', // Fondo semiopaco
     //justifyContent: 'center',
     //alignItems: 'center',
   },
@@ -363,10 +373,10 @@ const styles = StyleSheet.create({
     paddingTop: 30
   },
   modalView: {
-    flex: 1,
+    //flex: 1,
     //justifyContent: 'center', // Centrar verticalmente
     alignItems: 'center', // Centrar horizontalmente
-    maxHeight: 300, // Ajusta este valor según tus necesidades
+    //maxHeight: 300, // Ajusta este valor según tus necesidades
     //marginHorizontal:15,
     //marginVertical:70,
     margin: 30,
@@ -383,10 +393,10 @@ const styles = StyleSheet.create({
     elevation: 5
   },
   modalViewUser: {
-    flex: 1,
+    //flex: 1,
     //justifyContent: 'center', // Centrar verticalmente
     alignItems: 'center', // Centrar horizontalmente
-    maxHeight: 200, // Ajusta este valor según tus necesidades
+    //maxHeight: 150, // Ajusta este valor según tus necesidades
     //marginHorizontal:15,
     //marginVertical:70,
     margin: 30,
