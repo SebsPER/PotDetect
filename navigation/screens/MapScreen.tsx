@@ -52,8 +52,9 @@ export default function MapScreen({ navigation }) {
         const fetchedLocations = await fetchLocationsFromFirestore(GlobalValues.getWorkProyecto(true));
         setLocations(fetchedLocations);
       };
-
-      fetchLocations();
+      if (GlobalValues.getWorkProyecto(true) != null) {
+        fetchLocations();
+      }
     }, [proy])
   );
 
@@ -82,10 +83,6 @@ export default function MapScreen({ navigation }) {
     querySnapshot.forEach((doc) => {
       const data = doc.data();
 
-      // console.log(doc.title);
-      // console.log(data.latitude);
-      // console.log(data.longitude);
-      // console.log(data.description);
       locations.push({
         title: data.title,
         Grieta: data.Grietas,
@@ -118,17 +115,12 @@ export default function MapScreen({ navigation }) {
   };
 
   const handleCreateUser = (Grietaa, Huecoo, HuecoGravee, descriptionn, fotoo, Usuario) => {
-    setGrietas(Grietaa)
-    setHueco(Huecoo)
-    setHuecoGrave(HuecoGravee)
-    setDescription(descriptionn)
-    setFoto(fotoo)
-    setUserName(Usuario)
-
-    console.log("Grieta", grieta)
-    console.log("Huecos", hueco)
-    console.log("HuecoGrave", huecoGrave)
-    console.log("foto", foto)
+    setGrietas(Grietaa);
+    setHueco(Huecoo);
+    setHuecoGrave(HuecoGravee);
+    setDescription(descriptionn);
+    setFoto(fotoo);
+    setUserName(Usuario);
     setModalAgre(true);
   };
 
@@ -138,7 +130,7 @@ export default function MapScreen({ navigation }) {
 
   const handleItemClick = (item) => {
     console.log(item.id)
-    GlobalValues.setProyectoUID(item.id)
+    GlobalValues.setProyectoUID(item.id);
     GlobalValues.setWorkProyecto(item);
     onProyectoSelect(item);
   };
@@ -153,79 +145,88 @@ export default function MapScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <Modal
-        animationType='slide'
-        transparent={true}
-        visible={modalAgre}
-        onRequestClose={() => {
-          alert("Cerro el modal");
-        }}>
-        <View style={styles.modalBackground}>
-          <View style={styles.modalView}>
-            <Text style={styles.modalTitle}>Datos del daño</Text>
-            <Text style={styles.dato}>Grietas: {grieta}</Text>
-            <Text style={styles.dato}>Huecos: {hueco}</Text>
-            <Text style={styles.dato}>Huecos Graves: {huecoGrave}</Text>
-            <Text style={styles.dato}>Empleado: {Usuario}</Text>
-            <Image
-              source={{ uri: foto }}
-              style={styles.modalImage}
+      
+      
+      {!modalAgre ? (
+      <View style={styles.container}>
+        <Modal animationType="slide" transparent={true} visible={isModalVisible}>
+          <View style={styles.modalContent}>
+            <View style={styles.titleContainer}>
+              <Text style={styles.title}>Filtrar por Proyecto</Text>
+              <Pressable onPress={modalOnClose}>
+                <Ionicons name={"close"} size={22} color={"#101651"} />
+              </Pressable>
+            </View>
+            <FlatList
+              style={{ marginTop: 10, marginHorizontal: 10 }}
+              data={projects}
+              renderItem={renderProyList}
+              keyExtractor={(item) => item.id}
             />
-            <Pressable style={styles.button}
-              onPress={() => setModalAgre(!modalAgre)}
-            >
-              <Text style={styles.cancelButton}>Cancelar</Text>
-            </Pressable>
-
           </View>
+        </Modal>
+        <View style={styles.filterContainer}>
+          <TouchableOpacity onPress={() =>{setIsModalVisible(true)}} style={styles.filterButton}>
+            {
+              GlobalValues.getProyectoUID() === null ?
+                <Text style={{fontSize:14, color:"white", fontFamily:"Arial"}}>Filtrar <Ionicons name="md-filter" size={18} color="white" /></Text>
+                :
+                <Text style={{fontSize:14, color:"white", fontFamily:"Arial"}}>{GlobalValues.getWorkProyecto(false)} <Ionicons name="md-filter" size={18} color="white" /></Text>
+            }
+          </TouchableOpacity>
         </View>
-      </Modal>
 
-      <Modal animationType="slide" transparent={true} visible={isModalVisible}>
-        <View style={styles.modalContent}>
-          <View style={styles.titleContainer}>
-            <Text style={styles.title}>Filtrar por Proyecto</Text>
-            <Pressable onPress={modalOnClose}>
-              <Ionicons name={"close"} size={22} color={"#101651"} />
-            </Pressable>
-          </View>
-          <FlatList
-            style={{ marginTop: 10, marginHorizontal: 10 }}
-            data={projects}
-            renderItem={renderProyList}
-            keyExtractor={(item) => item.id}
+        <MapView
+          style={styles.map}
+          onRegionChange={onRegionChange}
+          initialRegion={{
+            latitude: -11.969071010202395,
+            latitudeDelta: 1.5772551319534536,
+            longitude: -76.90717739984393,
+            longitudeDelta: 0.9701124206185341,
+          }}
+          provider={PROVIDER_GOOGLE}
+          customMapStyle={true ? mapStyle : null}
+        >
+          {locations.map((location, index) => (
+            <Marker
+              key={index}
+              coordinate={location.location}
+              onPress={() => handleCreateUser(location.Grieta, location.Hueco, location.HuecoGrave, location.description, location.foto, location.Usuario)}
+              image={require('../../assets/fluent_location-16-filled.png')}
+            >
+            </Marker>
+          ))}
+        </MapView>
+        </View>) : (
+        <View style={styles.container}>
+        <View style={{ flex: 4.5, flexDirection: 'column', justifyContent: 'center', alignItems: 'center', backgroundColor: 'white' }}>
+          <Image
+            style={styles.image}
+            source={{ uri: foto }}
+          //placeholder={{uri: 'https://www.icegif.com/wp-content/uploads/2023/05/icegif-186.gif'}}
+          //loadingIndicatorSource={require("./assets/loading_det.gif")}
           />
         </View>
-      </Modal>
-
-      <View style={styles.filterContainer}>
-        <TouchableOpacity onPress={() =>{setIsModalVisible(true)}} style={styles.filterButton}>
-          <Text style={{fontSize:14, color:"white", fontFamily:"Arial"}}>Filtrar <Ionicons name="md-filter" size={18} color="white" /></Text>
-        </TouchableOpacity>
-      </View>
-
-      <MapView
-        style={styles.map}
-        onRegionChange={onRegionChange}
-        initialRegion={{
-          latitude: -11.969071010202395,
-          latitudeDelta: 1.5772551319534536,
-          longitude: -76.90717739984393,
-          longitudeDelta: 0.9701124206185341,
-        }}
-        provider={PROVIDER_GOOGLE}
-        customMapStyle={true ? mapStyle : null}
-      >
-        {locations.map((location, index) => (
-          <Marker
-            key={index}
-            coordinate={location.location}
-            onPress={() => handleCreateUser(location.Grieta, location.Hueco, location.HuecoGrave, location.description, location.foto, location.Usuario)}
-            image={require('../../assets/fluent_location-16-filled.png')}
-          >
-          </Marker>
-        ))}
-      </MapView>
+        <View style={{ flex: 1.5, flexDirection: 'column', justifyContent: "space-around" }}>
+          <View style={{ flex: 4, flexDirection: 'column', justifyContent: "space-around" }}>
+            <Text style={styles.damageTextTitle}>Reporte de detección</Text>
+            <Text style={styles.damageText}>Huecos: {hueco}</Text>
+            <Text style={styles.damageText}>Huecos Graves: {huecoGrave}</Text>
+            <Text style={styles.damageText}>Grietas: {grieta}</Text>
+            <Text style={styles.damageText}>Empleado: {Usuario}</Text>
+          </View>
+          <View style={{ flex: 2, flexDirection: 'row', justifyContent: "space-evenly" }}>
+            <TouchableOpacity style={{ width: '95%', height: 50, borderWidth: 1, alignSelf: 'flex-start', borderRadius: 4, justifyContent: 'center', alignItems: 'center', backgroundColor: "#28D585", borderColor: "#28D585" }}
+              onPress={() => {
+                setModalAgre(false);
+              }}>
+              <Text style={{ color: "white", fontWeight: 'bold' }}>Volver</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </View>)}
+      
     </View>
   );
 }
@@ -234,8 +235,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#ffffff',
-    alignItems: 'center',
     justifyContent: 'center',
+  },
+  image: {
+    flex: 1,
+    width: '100%',
+    backgroundColor: '#0553',
   },
   modalImage: {
     width: 600, // Ancho deseado de la imagen
@@ -283,7 +288,19 @@ const styles = StyleSheet.create({
     padding: 10,
     elevation: 2
   },
-
+  damageText: {
+    fontSize: 14,
+    color: '#8F8F8F',
+    marginLeft: 15,
+    fontFamily: "Arial"
+  },
+  damageTextTitle: {
+    fontSize: 18,
+    color: '#2A3C44',
+    marginLeft: 15,
+    fontFamily: "Arial",
+    fontWeight: "bold"
+  },
   ModalAgreTitle: {
     textAlign: 'center',
     fontWeight: 'bold',
@@ -323,7 +340,9 @@ const styles = StyleSheet.create({
     position: 'absolute',
     backgroundColor: '#28D585',
     top: "8%",
-    width: "22%",
+    //width: "22%",
+    alignSelf: 'center',
+    paddingHorizontal: 12,
     height: "5%",
     borderRadius: 100,
     elevation: 2,
