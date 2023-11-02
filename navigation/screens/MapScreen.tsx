@@ -177,6 +177,7 @@ export default function MapScreen({ navigation }) {
         </View>
 
         <MapView
+        provider={PROVIDER_GOOGLE}
           style={styles.map}
           onRegionChange={onRegionChange}
           initialRegion={{

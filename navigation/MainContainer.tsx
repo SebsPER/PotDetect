@@ -46,7 +46,7 @@ export default function MainContainer() {
                 tabBarInactiveTintColor: 'rgb(155, 174, 184)',
             })}>
 
-            <Tab.Screen name={objectScreenName} component={ObjectDetector} options={{ headerShown: false }} />
+            <Tab.Screen name={objectScreenName} component={ObjectDetector} options={{ headerShown: false, unmountOnBlur:true }} />
             <Tab.Screen name={mapScreenName} component={MapScreen} options={{ headerShown: false }} />
             <Tab.Screen name={proyectScreenName} component={ProyectsScreen} options={{ headerShown: false }} />
             <Tab.Screen name={userScreenName} component={UserScreen} options={{ headerShown: false }} />

@@ -11,6 +11,7 @@ import { db, storage } from '../../firebaseConfig';
 import uuid from 'react-native-uuid';
 import GlobalValues from '../../utils/GlobalValues.tsx';
 import { useFocusEffect } from '@react-navigation/native';
+import { useIsFocused } from '@react-navigation/native';
 
 import { Picker } from '@react-native-picker/picker';
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -18,7 +19,9 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 const blurhash =
   '|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[';
 
+
 export default function ObjectDetector({ navigation }) {
+  const isFocused = useIsFocused();
   const [type, setType] = useState(CameraType.back);
   const [permission, requestPermission] = Camera.useCameraPermissions();
   const [selectedProyecto, setSelectedProyecto] = useState(null);
@@ -134,7 +137,7 @@ export default function ObjectDetector({ navigation }) {
       const imageUri = photo.uri;
 
       //const apiUrl = 'http://localhost:5000/media/upload'
-      const apiUrl = 'http://172.16.221.151:5000/media/upload';
+      const apiUrl = 'https://pot-detect-on3ek6ouga-uc.a.run.app/media/upload';
 
       const name_ = photo.uri.split('/').pop();
 
@@ -249,6 +252,7 @@ export default function ObjectDetector({ navigation }) {
 
   return (
     <View style={styles.container}>
+
       <Modal animationType="slide" transparent={true} visible={isModalVisible}>
         <View style={styles.modalContent}>
           <View style={styles.titleContainer}>
@@ -265,7 +269,6 @@ export default function ObjectDetector({ navigation }) {
           />
         </View>
       </Modal>
-
 
       {photoTaken ? (
         <View style={{ flex: 1 }}>
@@ -318,11 +321,7 @@ export default function ObjectDetector({ navigation }) {
             </View>
           </View>
         </View>
-
       )}
-
-
-
     </View>
   );
 }
@@ -403,7 +402,7 @@ const styles = StyleSheet.create({
   },
   title: {
     color: '#101651',
-    fontFamily: "Arial",
+    //fontFamily: "Arial",
     fontSize: 16,
   },
   pickerContainer: {
