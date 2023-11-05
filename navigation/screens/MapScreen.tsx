@@ -169,15 +169,15 @@ export default function MapScreen({ navigation }) {
           <TouchableOpacity onPress={() =>{setIsModalVisible(true)}} style={styles.filterButton}>
             {
               GlobalValues.getProyectoUID() === null ?
-                <Text style={{fontSize:14, color:"white", fontFamily:"Arial"}}>Filtrar <Ionicons name="md-filter" size={18} color="white" /></Text>
+                <Text style={{fontSize:14, color:"white"}}>Filtrar <Ionicons name="md-filter" size={18} color="white" /></Text>
                 :
-                <Text style={{fontSize:14, color:"white", fontFamily:"Arial"}}>{GlobalValues.getWorkProyecto(false)} <Ionicons name="md-filter" size={18} color="white" /></Text>
+                <Text style={{fontSize:14, color:"white"}}>{GlobalValues.getWorkProyecto(false)} <Ionicons name="md-filter" size={18} color="white" /></Text>
             }
           </TouchableOpacity>
         </View>
 
         <MapView
-        provider={PROVIDER_GOOGLE}
+          provider={PROVIDER_GOOGLE}
           style={styles.map}
           onRegionChange={onRegionChange}
           initialRegion={{
@@ -186,7 +186,6 @@ export default function MapScreen({ navigation }) {
             longitude: -76.90717739984393,
             longitudeDelta: 0.9701124206185341,
           }}
-          provider={PROVIDER_GOOGLE}
           customMapStyle={true ? mapStyle : null}
         >
           {locations.map((location, index) => (
@@ -201,7 +200,7 @@ export default function MapScreen({ navigation }) {
         </MapView>
         </View>) : (
         <View style={styles.container}>
-        <View style={{ flex: 4.5, flexDirection: 'column', justifyContent: 'center', alignItems: 'center', backgroundColor: 'white' }}>
+        <View style={{ height:"70%", flexDirection: 'column', justifyContent: 'center', alignItems: 'center', backgroundColor: 'white' }}>
           <Image
             style={styles.image}
             source={{ uri: foto }}
@@ -209,16 +208,16 @@ export default function MapScreen({ navigation }) {
           //loadingIndicatorSource={require("./assets/loading_det.gif")}
           />
         </View>
-        <View style={{ flex: 1.5, flexDirection: 'column', justifyContent: "space-around" }}>
-          <View style={{ flex: 4, flexDirection: 'column', justifyContent: "space-around" }}>
-            <Text style={styles.damageTextTitle}>Reporte de detección</Text>
-            <Text style={styles.damageText}>Huecos: {hueco}</Text>
-            <Text style={styles.damageText}>Huecos Graves: {huecoGrave}</Text>
-            <Text style={styles.damageText}>Grietas: {grieta}</Text>
-            <Text style={styles.damageText}>Empleado: {Usuario}</Text>
+        <View style={{ height:"30%", flexDirection: 'column', justifyContent: "space-evenly" }}>
+          <View style={{ height:"65%", flexDirection: 'column', justifyContent: "space-around" }}>
+            <Text style={styles.damageTextTitle}><Image source={require('../../assets/tdesign_location-1.png')} style={{height:14, width:14}}/> Reporte de detección</Text>
+            <Text style={styles.damageText}><Text style={{fontSize: 14, color: '#8F8F8F', marginLeft: 15, fontWeight:'bold'}}>Huecos:</Text> {hueco} </Text> 
+            <Text style={styles.damageText}><Text style={{fontSize: 14, color: '#8F8F8F', marginLeft: 15, fontWeight:'bold'}}>Huecos Graves:</Text> {huecoGrave}</Text>
+            <Text style={styles.damageText}><Text style={{fontSize: 14, color: '#8F8F8F', marginLeft: 15, fontWeight:'bold'}}>Grietas:</Text> {grieta}</Text>
+            <Text style={styles.damageText}><Text style={{fontSize: 14, color: '#8F8F8F', marginLeft: 15, fontWeight:'bold'}}>Empleado:</Text> {Usuario}</Text>
           </View>
-          <View style={{ flex: 2, flexDirection: 'row', justifyContent: "space-evenly" }}>
-            <TouchableOpacity style={{ width: '95%', height: 50, borderWidth: 1, alignSelf: 'flex-start', borderRadius: 4, justifyContent: 'center', alignItems: 'center', backgroundColor: "#28D585", borderColor: "#28D585" }}
+          <View style={{ height: "35%", flexDirection: 'row', justifyContent: "space-evenly", alignItems:"center" }}>
+            <TouchableOpacity style={{ width: '95%', height: "60%", borderWidth: 1, borderRadius: 4, justifyContent: 'center', alignItems: 'center', backgroundColor: "#28D585", borderColor: "#28D585" }}
               onPress={() => {
                 setModalAgre(false);
               }}>
@@ -292,14 +291,12 @@ const styles = StyleSheet.create({
   damageText: {
     fontSize: 14,
     color: '#8F8F8F',
-    marginLeft: 15,
-    fontFamily: "Arial"
+    marginLeft: 15
   },
   damageTextTitle: {
     fontSize: 18,
     color: '#2A3C44',
     marginLeft: 15,
-    fontFamily: "Arial",
     fontWeight: "bold"
   },
   ModalAgreTitle: {
@@ -376,7 +373,6 @@ const styles = StyleSheet.create({
   },
   title: {
     color: '#101651',
-    fontFamily:"Arial",
     fontSize: 16,
   },
   pickerContainer: {

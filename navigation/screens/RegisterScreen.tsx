@@ -120,9 +120,8 @@ export default function RegisterScreen({ navigation }) {
             <Text>Grieta: {item.Grieta}</Text>
             <Text>Empleado: {item.Empleado}</Text>
           </View>
-          <Text style={styles.projectCounter}></Text>
           <TouchableOpacity onPress={() => handleDeleteRegister(item.id, item.Path)}>
-            <Ionicons name="trash-outline" size={24} color="red" />
+            <Ionicons name="trash-outline" size={24} color="rgb(237, 127, 120)" />
           </TouchableOpacity>
         </View>
       </View>
@@ -187,6 +186,7 @@ const styles = StyleSheet.create({
     marginLeft: 12,
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: "center"
   },
   column: {
     flex: 1,

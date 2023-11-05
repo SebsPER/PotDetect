@@ -287,7 +287,7 @@ export default function ObjectDetector({ navigation }) {
           </TouchableOpacity>
         </View>) : (
         <View style={styles.container}>
-          <View style={{ flex: 4.5, flexDirection: 'column', justifyContent: 'center', alignItems: 'center', backgroundColor: 'white' }}>
+          <View style={{ height: "70%", flexDirection: 'column', justifyContent: 'center', alignItems: 'center', backgroundColor: 'white' }}>
             <Image
               style={styles.image}
               source={{ uri: `data:image/png;base64,${baseImg}` }}
@@ -296,27 +296,28 @@ export default function ObjectDetector({ navigation }) {
             //loadingIndicatorSource={require("./assets/loading_det.gif")}
             />
           </View>
-          <View style={{ flex: 1.5, flexDirection: 'column', justifyContent: "space-around" }}>
-            <View style={{ flex: 4, flexDirection: 'column', justifyContent: "space-around" }}>
-              <Text style={styles.damageTextTitle}>Reporte de detección</Text>
-              <Text style={styles.damageText}>Huecos: {responseData.Hueco}</Text>
-              <Text style={styles.damageText}>Huecos Graves: {responseData.HuecoGrave}</Text>
-              <Text style={styles.damageText}>Grietas: {responseData.Grieta}</Text>
-              <Text style={styles.damageText}>Tiempo de Inferencia: {responseData.elapsed}</Text>
+          <View style={{ height:"30%", flexDirection: 'column', justifyContent: "space-evenly" }}>
+            <View style={{ height:"65%", flexDirection: 'column', justifyContent: "space-evenly" }}>
+              <Text style={styles.damageTextTitle}><Image source={require('../../assets/tdesign_location-1.png')} style={{height:14, width:14}}/> Reporte de detección</Text><Text style={styles.damageTextTitle}><Image source={require('../../assets/tdesign_location-1.png')} style={{height:14, width:14}}/> Reporte de detección</Text>
+              <Text style={styles.damageText}><Text style={{fontSize: 14, color: '#8F8F8F', marginLeft: 15, fontWeight:'bold'}}>Huecos:</Text> {responseData.Hueco} </Text> 
+              <Text style={styles.damageText}><Text style={{fontSize: 14, color: '#8F8F8F', marginLeft: 15, fontWeight:'bold'}}>Huecos Graves:</Text> {responseData.HuecoGrave}</Text>
+              <Text style={styles.damageText}><Text style={{fontSize: 14, color: '#8F8F8F', marginLeft: 15, fontWeight:'bold'}}>Grietas:</Text> {responseData.Grieta}</Text>
+              <Text style={styles.damageText}><Text style={{fontSize: 14, color: '#8F8F8F', marginLeft: 15, fontWeight:'bold'}}>Tiempo de Inferencia:</Text> {responseData.elapsed}</Text>
+
             </View>
-            <View style={{ flex: 2, flexDirection: 'row', justifyContent: "space-evenly" }}>
-              <TouchableOpacity style={{ width: '47%', height: 50, borderWidth: 1, alignSelf: 'flex-start', borderRadius: 4, justifyContent: 'center', alignItems: 'center', backgroundColor: "white", borderColor: "#28D585" }}
+            <View style={{ height: "35%", flexDirection: 'row', justifyContent: "space-evenly", alignItems:"center" }}>
+              <TouchableOpacity style={{ width: '47%', height: "60%", borderWidth: 1, borderRadius: 4, justifyContent: 'center', alignItems: 'center', backgroundColor: "white", borderColor: "#28D585" }}
                 onPress={() => {
                   setPhotoTaken(true)
                   setbaseImg('')
                 }}>
-                <Text style={{ color: "#28D585" }}>Return</Text>
+                <Text style={{ color: "#28D585", fontWeight:"bold" }}>Volver</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={{ width: '47%', height: 50, borderWidth: 1, alignSelf: 'flex-start', borderRadius: 4, justifyContent: 'center', alignItems: 'center', backgroundColor: "#28D585", borderColor: "#28D585" }}
+              <TouchableOpacity style={{ width: '47%', height: "60%", borderWidth: 1, borderRadius: 4, justifyContent: 'center', alignItems: 'center', backgroundColor: "#28D585", borderColor: "#28D585" }}
                 onPress={() => {
                   setIsModalVisible(true)
                 }}>
-                <Text style={{ color: "white" }}>Save</Text>
+                <Text style={{ color: "white", fontWeight:"bold" }}>Guardar</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -330,6 +331,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
+    backgroundColor: "white"
   },
   image: {
     flex: 1,

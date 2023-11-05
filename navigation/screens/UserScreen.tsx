@@ -108,13 +108,13 @@ export default function UserScreen({ navigation }) {
   const renderUserItem = ({ item }) => (
     <TouchableOpacity onPress={() => handleItemClick(item)}>
       <View style={styles.projectItem}>
-        <Image source={require('../../assets/perfil.jpeg')} style={styles.projectImage} />
+        <Image source={require('../../assets/gridicons_user.png')} style={styles.projectImage} />
         <View style={styles.projectInfo}>
-          <Text style={styles.projectName}>{item.name}</Text>
-          <Text style={styles.projectCounter}>{getPrivilegeLabel(item.priv)}</Text>
+          <Text style={styles.projectCounter}>{item.name}</Text>
+          <Text style={styles.projectName}>{getPrivilegeLabel(item.priv)}</Text>
         </View>
         <TouchableOpacity onPress={() => handleDeleteProject(item.id)}>
-          <Ionicons name="trash-outline" size={24} color="red" />
+          <Ionicons name="trash-outline" size={24} color="rgb(237, 127, 120)" />
         </TouchableOpacity>
       </View>
 
@@ -220,7 +220,7 @@ export default function UserScreen({ navigation }) {
 
 
              <View style={{ flexDirection: 'row', justifyContent: "space-evenly" }}>
-                                                  <TouchableOpacity style={{ width: '47%', height: 50, borderWidth: 1, marginRigth:0, alignSelf: 'flex-start', borderRadius: 4, justifyContent: 'center', alignItems: 'center', backgroundColor: "white", borderColor: 'rgb(40, 213, 133)' }}
+                                                  <TouchableOpacity style={{ width: '47%', height: 50, borderWidth: 1, marginRight:0, alignSelf: 'flex-start', borderRadius: 4, justifyContent: 'center', alignItems: 'center', backgroundColor: "white", borderColor: 'rgb(40, 213, 133)' }}
                                                     onPress={() => setModalAgre(!modalAgre)}>
                                                     <Text style={{ color: 'rgb(40, 213, 133)' }}>Cerrar</Text>
                                                   </TouchableOpacity>
@@ -259,7 +259,7 @@ export default function UserScreen({ navigation }) {
             />
 
              <View style={{ flexDirection: 'row', justifyContent: "space-evenly" }}>
-                                      <TouchableOpacity style={{ width: '47%', height: 50, borderWidth: 1, marginRigth:0, alignSelf: 'flex-start', borderRadius: 4, justifyContent: 'center', alignItems: 'center', backgroundColor: "white", borderColor: 'rgb(40, 213, 133)' }}
+                                      <TouchableOpacity style={{ width: '47%', height: 50, borderWidth: 1, marginRight:0, alignSelf: 'flex-start', borderRadius: 4, justifyContent: 'center', alignItems: 'center', backgroundColor: "white", borderColor: 'rgb(40, 213, 133)' }}
                                         onPress={() => setModalLog(!modalLog)}>
                                         <Text style={{ color: 'rgb(40, 213, 133)' }}>Cerrar</Text>
                                       </TouchableOpacity>
@@ -280,12 +280,6 @@ export default function UserScreen({ navigation }) {
         <Text style={styles.headerTitle}>Empleados</Text>
         
       </View>
-      {
-        logUser === "" ?
-          <Text>Elige tu perfil</Text>
-          :
-          <Text>¡Bienvenido! {logUser}</Text>
-      }
       <FlatList
         style={{ marginTop: 15, marginHorizontal: 10 }}
         data={users}
@@ -453,6 +447,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   headerTitle: {
+    marginTop: 8,
     fontSize: 24,
     fontWeight: 'bold',
   },

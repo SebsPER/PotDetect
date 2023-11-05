@@ -94,13 +94,13 @@ export default function ProyectsScreen({ navigation }) {
   const renderProjectItem = ({ item }) => (
     <TouchableOpacity onPress={() => handleItemClick(item)}>
       <View style={styles.projectItem}>
-        <Image source={require('../../assets/project.jpeg')} style={styles.projectImage} />
+        <Image source={require('../../assets/mdi_file-eye.png')} style={styles.projectImage} />
         <View style={styles.projectInfo}>
           <Text style={styles.projectName}>{item.name}</Text>
           <Text style={styles.projectCounter}>{item.counter} Registros</Text>
         </View>
         <TouchableOpacity onPress={() => handleDeleteProject(item.id)}>
-          <Ionicons name="trash-outline" size={24} color="red" />
+          <Ionicons name="trash-outline" size={24} color="rgb(237, 127, 120)" />
         </TouchableOpacity>
       </View>
     </TouchableOpacity>
@@ -152,6 +152,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   headerTitle: {
+    marginTop: 8,
     fontSize: 24,
     fontWeight: 'bold',
   },
