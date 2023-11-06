@@ -187,7 +187,7 @@ export default function UserScreen({ navigation }) {
   return (
     <View style={styles.container}>
       <Modal
-        animationType='slide'
+        animationType='fade'
         transparent={true}
         visible={modalAgre}
         onRequestClose={() => {
@@ -238,7 +238,7 @@ export default function UserScreen({ navigation }) {
         </View>
       </Modal>
       <Modal
-        animationType='slide'
+        animationType='fade'
         transparent={true}
         visible={modalLog}
         onRequestClose={() => {

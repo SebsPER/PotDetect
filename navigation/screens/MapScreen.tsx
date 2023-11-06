@@ -138,7 +138,7 @@ export default function MapScreen({ navigation }) {
   const renderProyList = ({ item }) => (
     <TouchableOpacity onPress={() => handleItemClick(item)}>
       <View style={styles.list}>
-        <Text style={{color: '#101651' }}>{item.name}</Text>
+        <Text style={{color: '#28D585' }}>{item.name}</Text>
       </View>
     </TouchableOpacity>
   );
@@ -149,21 +149,26 @@ export default function MapScreen({ navigation }) {
       
       {!modalAgre ? (
       <View style={styles.container}>
-        <Modal animationType="slide" transparent={true} visible={isModalVisible}>
+        <Modal animationType="fade" transparent={true} visible={isModalVisible}>
+        <View style={styles.modalBackground}>
           <View style={styles.modalContent}>
-            <View style={styles.titleContainer}>
-              <Text style={styles.title}>Filtrar por Proyecto</Text>
-              <Pressable onPress={modalOnClose}>
-                <Ionicons name={"close"} size={22} color={"#101651"} />
-              </Pressable>
+            <View style={{flexDirection:'column', justifyContent:'space-evenly'}}>
+              <Text style={{fontSize: 24, fontWeight:'bold', marginHorizontal:"5%", marginTop:"5%", color:"#363434"}}>Filtrar</Text>
+              <Text style={{fontSize: 16, marginHorizontal:"5%", color: "#858585"}}>Selecccionar un proyecto para ver los registros relacionados</Text>
+              <FlatList
+                style={{ marginTop: "1%", marginHorizontal: "5%", height: "40%"}}
+                data={projects}
+                renderItem={renderProyList}
+                keyExtractor={(item) => item.id}
+              />
+              <TouchableOpacity style={{ marginHorizontal:"5%", height: "20%", borderWidth: 1, borderRadius: 4, justifyContent: 'center', alignItems: 'center', backgroundColor: "#28D585", borderColor: "#28D585" }}
+                onPress={modalOnClose}>
+                <Text style={{ color: "white", fontWeight: 'bold' }}>Volver</Text>
+              </TouchableOpacity>
             </View>
-            <FlatList
-              style={{ marginTop: 10, marginHorizontal: 10 }}
-              data={projects}
-              renderItem={renderProyList}
-              keyExtractor={(item) => item.id}
-            />
           </View>
+          </View>
+
         </Modal>
         <View style={styles.filterContainer}>
           <TouchableOpacity onPress={() =>{setIsModalVisible(true)}} style={styles.filterButton}>
@@ -358,18 +363,18 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     borderTopRightRadius: 18,
     borderTopLeftRadius: 18,
-    position: 'absolute',
     bottom: 0,
+    position: 'absolute'
   },
   titleContainer: {
-    height: '16%',
-    backgroundColor: '#F5F5F5',
+    height: '12%',
+    backgroundColor: '#FFFFFF',
     borderTopRightRadius: 10,
     borderTopLeftRadius: 10,
     paddingHorizontal: 20,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-end',
   },
   title: {
     color: '#101651',

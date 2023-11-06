@@ -245,7 +245,7 @@ export default function ObjectDetector({ navigation }) {
   const renderProyList = ({ item }) => (
     <TouchableOpacity onPress={() => handleItemClick(item)}>
       <View style={styles.list}>
-        <Text style={{ color: '#101651' }}>{item.name}</Text>
+        <Text style={{ color: '#28D585' }}>{item.name}</Text>
       </View>
     </TouchableOpacity>
   );
@@ -253,20 +253,23 @@ export default function ObjectDetector({ navigation }) {
   return (
     <View style={styles.container}>
 
-      <Modal animationType="slide" transparent={true} visible={isModalVisible}>
+      <Modal animationType="fade" transparent={true} visible={isModalVisible}>
+      <View style={styles.modalBackground}>
         <View style={styles.modalContent}>
-          <View style={styles.titleContainer}>
-            <Text style={styles.title}>Elegir Proyecto</Text>
-            <Pressable onPress={modalOnClose}>
-              <Ionicons name={"close"} size={22} color={"#101651"} />
-            </Pressable>
-          </View>
+        <Image source={require('../../assets/heroicons-solid_save.png')}/>
+          <Text style={{color:'#2A3C44', fontSize: 16, fontWeight:'bold', textAlign:"center"}}>¿A que proyecto pertencerá?</Text>
+          <Text style={{color:'#2A3C44', fontSize: 14, textAlign:"center"}}>Seleccione un proyecto para guardar este registro</Text>
           <FlatList
             style={{ marginTop: 10, marginHorizontal: 10 }}
             data={projects}
             renderItem={renderProyList}
             keyExtractor={(item) => item.id}
           />
+          <TouchableOpacity style={{ marginVertical:"5%", width: "100%", height: "15%", borderWidth: 1, borderRadius: 4, justifyContent: 'center', alignItems: 'center', backgroundColor: "#28D585", borderColor: "#28D585" }}
+                onPress={modalOnClose}>
+                <Text style={{ color: "#FFFFFF", fontWeight: 'bold' }}>Volver</Text>
+          </TouchableOpacity>
+        </View>
         </View>
       </Modal>
 
@@ -283,7 +286,7 @@ export default function ObjectDetector({ navigation }) {
             bottom: 30,
             alignSelf: 'center',
             opacity: 0.5,
-          }} onPress={__takePicture}>
+          }} onPress={__takePicture}> 
           </TouchableOpacity>
         </View>) : (
         <View style={styles.container}>
@@ -291,14 +294,13 @@ export default function ObjectDetector({ navigation }) {
             <Image
               style={styles.image}
               source={{ uri: `data:image/png;base64,${baseImg}` }}
-              placeholder={blurhash}
             //placeholder={{uri: 'https://www.icegif.com/wp-content/uploads/2023/05/icegif-186.gif'}}
             //loadingIndicatorSource={require("./assets/loading_det.gif")}
             />
           </View>
           <View style={{ height:"30%", flexDirection: 'column', justifyContent: "space-evenly" }}>
             <View style={{ height:"65%", flexDirection: 'column', justifyContent: "space-evenly" }}>
-              <Text style={styles.damageTextTitle}><Image source={require('../../assets/tdesign_location-1.png')} style={{height:14, width:14}}/> Reporte de detección</Text><Text style={styles.damageTextTitle}><Image source={require('../../assets/tdesign_location-1.png')} style={{height:14, width:14}}/> Reporte de detección</Text>
+              <Text style={styles.damageTextTitle}><Image source={require('../../assets/tdesign_location-1.png')} style={{height:14, width:14}}/> Reporte de detección</Text>
               <Text style={styles.damageText}><Text style={{fontSize: 14, color: '#8F8F8F', marginLeft: 15, fontWeight:'bold'}}>Huecos:</Text> {responseData.Hueco} </Text> 
               <Text style={styles.damageText}><Text style={{fontSize: 14, color: '#8F8F8F', marginLeft: 15, fontWeight:'bold'}}>Huecos Graves:</Text> {responseData.HuecoGrave}</Text>
               <Text style={styles.damageText}><Text style={{fontSize: 14, color: '#8F8F8F', marginLeft: 15, fontWeight:'bold'}}>Grietas:</Text> {responseData.Grieta}</Text>
@@ -383,14 +385,21 @@ const styles = StyleSheet.create({
     fontFamily: "Arial",
     fontWeight: "bold"
   },
+  modalBackground: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Fondo semiopaco
+    flexDirection: "column", 
+    justifyContent: 'center',
+  },
   modalContent: {
-    height: '35%',
-    width: '100%',
+    paddingVertical: "4%",
+    paddingHorizontal: "8%",
+    flexDirection: "column",
+    alignItems:'center',
+    height: '40%',
     backgroundColor: '#FFFFFF',
-    borderTopRightRadius: 18,
-    borderTopLeftRadius: 18,
-    position: 'absolute',
-    bottom: 0,
+    borderRadius: 6,
+    marginHorizontal: "5%",
   },
   titleContainer: {
     height: '16%',
