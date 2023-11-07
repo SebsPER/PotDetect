@@ -161,7 +161,7 @@ export default function MapScreen({ navigation }) {
                 renderItem={renderProyList}
                 keyExtractor={(item) => item.id}
               />
-              <TouchableOpacity style={{ marginHorizontal:"5%", height: "20%", borderWidth: 1, borderRadius: 4, justifyContent: 'center', alignItems: 'center', backgroundColor: "#28D585", borderColor: "#28D585" }}
+              <TouchableOpacity style={{ marginHorizontal:"5%", height: "16%", borderWidth: 1, borderRadius: 4, justifyContent: 'center', alignItems: 'center', backgroundColor: "#28D585", borderColor: "#28D585", marginTop: 32,  }}
                 onPress={modalOnClose}>
                 <Text style={{ color: "white", fontWeight: 'bold' }}>Volver</Text>
               </TouchableOpacity>
@@ -358,7 +358,7 @@ const styles = StyleSheet.create({
     alignItems: "center"
   },
   modalContent: {
-    height: '35%',
+    height: '45%',
     width: '100%',
     backgroundColor: '#FFFFFF',
     borderTopRightRadius: 18,
